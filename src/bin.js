@@ -8,20 +8,18 @@ program.version('0.0.1')
 
 program.command('clean')
     .description('clean work space')
-    .action(function(opt){
-        throw 'TODO'
-    })
+    .action(require('./clean.js'))
 
 program.command('build')
     .description('build your site')
-    .action(function(opt){
-        throw 'TODO'
-    })
+    .action(require('./build.js'))
 
 program.command('deploy')
     .description('publish to github page')
-    .action(function(opt){
-        throw 'TODO'
-    })
+    .action(require('./deploy.js'))
 
-program.parse()
+program.parse(process.argv)
+
+if (process.argv.length <= 2) {
+    program.outputHelp()
+}

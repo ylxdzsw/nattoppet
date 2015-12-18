@@ -10,6 +10,8 @@ $ npm install -g nattoppet
 $ nattoppet build
 ```
 
+for more information about nattoppet CLI util, use `nattoppet --help`
+
 #### 目录结构
 
 "A post" means a folder that contains `post.json`. Posts can be placed on directories that are not posts.
@@ -35,3 +37,4 @@ Use `nattoppet::xxx` or `"-nattoppet::xxx-"` in files to indicate variable.
 Avalables are:
 
     Template.post.layout.dir - 帖子的模板jade文件地址
+    Package.version - package.json的version字段的值
