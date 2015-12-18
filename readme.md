@@ -23,6 +23,7 @@ for more information about nattoppet CLI util, use `nattoppet --help`
     "title": "Hello World!",             // the title
     "date": "2015-12-17",                // the date
     "entry": "main",                     // entry html file without suffix
+    "label": ["lifestyle"],              // keywords of this post
     "discription": "hello world!",       // Optional: discription for this post
     "cover": "me.jpg",                   // Optional: cover image for this post
     "no-compile": ["something.coffee"],  // Optional: files that shouldn't compile
