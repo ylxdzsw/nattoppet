@@ -15,5 +15,5 @@ module.exports = co.wrap(function*(opt){
     }else{
         yield fs.mkdir(path.join(dest, '_site')).catch(util.error)
     }
-    yield compile(yield analyze('.'))
+    yield compile(path.join(dest), yield analyze(dest))
 })

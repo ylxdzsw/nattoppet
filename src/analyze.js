@@ -19,24 +19,23 @@ const addPost = co.wrap(function*(post, result){
     }
 })
 
-module.exports = co.wrap(function*(root){
-    const result = {} // use object rather than Map to get better JSON compatibility
-
-    // get all posts
-    result.posts = Object.create(null) // as these object will be "for in"
-    yield util.walk(root, co.wrap(function*(x, type){
+const getPosts = co.wrap(function*(dir, result){
+    result.posts = Object.create(null) // as these objects will be "for in" later
+    yield util.walk(dir, co.wrap(function*(x, type){
         if(type == 'dir' && (yield isPost(x))){
             yield addPost(x, result)
         }
     }))
+})
 
-    // postlist
+const genPostList = function(result){
     result.postlist = []
     for(let id in result.posts){
         result.postlist.push(id)
     }
+}
 
-    // byLabel
+const genByLabel = function(result){
     result.byLabel = Object.create(null)
     result.postlist.forEach(function(id){
         result.posts[id].info.label.forEach(function(label){
@@ -47,8 +46,9 @@ module.exports = co.wrap(function*(root){
             }
         })
     })
+}
 
-    // byDate
+const genByDate = function(result){
     result.byDate = Object.create(null)
     result.postlist.forEach(function(id){
         const date = result.posts[id].info.date.split('-').slice(0,2).join('-')
@@ -58,7 +58,14 @@ module.exports = co.wrap(function*(root){
             result.byDate[date] = [id]
         }
     })
+}
 
+module.exports = co.wrap(function*(root){
+    const result = {} // use object rather than Map to get better JSON compatibility
+    yield getPosts(root, result)
+    genPostList(result)
+    genByLabel(result)
+    genByDate(result)
     return result
 })
 
