@@ -1,13 +1,15 @@
-var fs = require('mz/fs')
-var co = require('co')
-var path = require('path')
+'use strict'
 
-walk = co.wrap(function*(dir, f){
+const fs = require('mz/fs')
+const co = require('co')
+const path = require('path')
+
+const walk = co.wrap(function*(dir, f){
     yield (yield fs.readdir(dir))
         .filter(x => x[0] != '.')
         .map(x => path.join(dir, x))
         .map(co.wrap(function*(x){
-            var stat = yield fs.stat(x)
+            const stat = yield fs.stat(x)
             if(stat.isDirectory()){
                 yield f(x, 'dir').catch(error)
                 yield walk(x, f)
@@ -17,7 +19,7 @@ walk = co.wrap(function*(dir, f){
         }))
 })
 
-error = function(err){
+const error = function(err){
     if(!err.printed){
         console.error(err.stack)
         err.printed = true
@@ -25,7 +27,10 @@ error = function(err){
     throw err
 }
 
+const nil = function(){}
+
 module.exports = {
     walk: walk,
-    error: error
+    error: error,
+    nil: nil
 }

@@ -3,6 +3,11 @@ Nattoppet
 
 A tiny static blog generator for [my own blog](http://www.ylxdzsw.com)
 
+#### 测试环境
+
+- Windows 7 32bit with sp1
+- node.js 5.3.0
+
 #### 使用方法
 
 ```

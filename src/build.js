@@ -1,8 +1,19 @@
-var co = require('co')
+'use strict'
 
-var analyze = require('./analyze.js')
-var compile = require('./compile.js')
+const co = require('co')
+const fs = require('mz/fs')
+const path = require('path')
 
-module.exports = co.wrap(function*(){
+const analyze = require('./analyze.js')
+const compile = require('./compile.js')
+const util = require('./util.js')
+
+module.exports = co.wrap(function*(opt){
+    let dest = opt.dir || '.'
+    if(yield fs.stat(path.join(dest, '_site')).catch(util.nil)){
+        util.error(new Error('_site已存在，请先执行 nattoppet clean'))
+    }else{
+        yield fs.mkdir(path.join(dest, '_site')).catch(util.error)
+    }
     yield compile(yield analyze('.'))
 })
