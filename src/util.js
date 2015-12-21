@@ -29,8 +29,16 @@ const error = function(err){
 
 const nil = function(){}
 
+const memo = function(f){ // only supports one simple(aka. not Object) argument
+    const result = Object.create(null)
+    return function(x){
+        return x in result ? result[x] : result[x] = f.call(this, x)
+    }
+}
+
 module.exports = {
     walk: walk,
     error: error,
-    nil: nil
+    nil: nil,
+    memo: memo
 }

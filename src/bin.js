@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander')
+const co = require('co')
 
 program.version('0.0.1')
     .option('-d, --dir <path>', 'specify blog dir') // TODO
@@ -17,6 +18,14 @@ program.command('build')
 program.command('deploy')
     .description('publish to github page')
     .action(require('./deploy.js'))
+
+program.command('auto')
+    .description('clean, build and deploy')
+    .action(co.wrap(function*(opt){
+        yield require('./clean.js')(opt)
+        yield require('./build.js')(opt)
+        yield require('./deploy.js')(opt)
+    }))
 
 program.parse(process.argv)
 

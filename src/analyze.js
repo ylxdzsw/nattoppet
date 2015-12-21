@@ -66,6 +66,7 @@ module.exports = co.wrap(function*(root){
     genPostList(result)
     genByLabel(result)
     genByDate(result)
+    console.info('分析完毕～')
     return result
 })
 
