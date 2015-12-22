@@ -4,6 +4,9 @@ const path = require('path')
 const fs = require('mz/fs')
 const cp = require('mz/child_process')
 const co = require('co')
+const jade = require('jade')
+const less = require('less')
+const coffee = require('coffee-script')
 
 const util = require('./util.js')
 
@@ -18,6 +21,65 @@ const copyPosts = co.wrap(function*(root, info){
     })
 })
 
+const replaceVar = co.wrap(function*(root, info){
+    const isText = hasExtname(new Set(['jade','less','coffee','html','css','js','md','json']))
+    yield util.walk(path.join(root, '_site'), co.wrap(function*(x, type){
+        if(type == 'file' && isText(x)){
+            const input = yield fs.readFile(x, 'utf8').catch(util.error)
+            const result = input.replace(buildReg("Template.post.layout.dir"),getVar["Template.post.layout.dir"](path.dirname(x)))
+            yield fs.writeFile(x,result).catch(util.error)
+        }
+    })).catch(util.error)
+})
+
+const compileJade = co.wrap(function*(root, info){
+    const isJade = hasExtname('jade')
+    yield info.postlist.map(function(post){
+        const shouldCompile = shouldCompileIn(post, root, info)
+        return util.walk(path.join(root, '_site', post), co.wrap(function*(x, type){
+            if(type == 'file' && isJade(x) && shouldCompile(x)){
+                const input = yield fs.readFile(x, 'utf8').catch(util.error)
+                const result = jade.render(input,{filename:x})
+                const dest = path.join(path.dirname(x), path.parse(x).name+'.html')
+                yield fs.writeFile(dest,result).catch(util.error)
+                yield fs.unlink(x).catch(util.error)
+            }
+        })).catch(util.error)
+    })
+})
+
+const compileLess = co.wrap(function*(root, info){
+    const isLess = hasExtname('less')
+    yield info.postlist.map(function(post){
+        const shouldCompile = shouldCompileIn(post, root, info)
+        return util.walk(path.join(root, '_site', post), co.wrap(function*(x, type){
+            if(type == 'file' && isLess(x) && shouldCompile(x)){
+                const input = yield fs.readFile(x, 'utf8').catch(util.error)
+                const result = (yield less.render(input).catch(util.error)).css
+                const dest = path.join(path.dirname(x), path.parse(x).name+'.css')
+                yield fs.writeFile(dest,result).catch(util.error)
+                yield fs.unlink(x).catch(util.error)
+            }
+        })).catch(util.error)
+    })
+})
+
+const compileCoffee = co.wrap(function*(root, info){
+    const isCoffee = hasExtname('coffee')
+    yield info.postlist.map(function(post){
+        const shouldCompile = shouldCompileIn(post, root, info)
+        return util.walk(path.join(root, '_site', post), co.wrap(function*(x, type){
+            if(type == 'file' && isCoffee(x) && shouldCompile(x)){
+                const input = yield fs.readFile(x, 'utf8').catch(util.error)
+                const result = coffee.compile(input)
+                const dest = path.join(path.dirname(x), path.parse(x).name+'.js')
+                yield fs.writeFile(dest,result).catch(util.error)
+                yield fs.unlink(x).catch(util.error)
+            }
+        })).catch(util.error)
+    })
+})
+
 const delExtra = co.wrap(function*(root, info){
     yield info.postlist
         .map(post => info.posts[post])
@@ -25,40 +87,52 @@ const delExtra = co.wrap(function*(root, info){
         .map(post => co(function*(){
             yield post.info['no-copy'].map(file => fs.unlink(path.join(root, '_site', post.id, file)).catch(util.error))
         }).catch(util.error))
-})
-
-const replaceVar = co.wrap(function*(root, info){
     yield util.walk(path.join(root, '_site'), co.wrap(function*(x, type){
-        if(type == 'file' && isText(x)){
-            yield fs.writeFile(x,
-                (yield fs.readFile(x, 'utf8').catch(util.error))
-                    .replace(buildReg("Template.post.layout.dir"),
-                        getVar["Template.post.layout.dir"]())
-
-            ).catch(util.error)
+        if(type == 'file' && path.basename(x) == 'post.json'){
+            yield fs.unlink(x).catch(util.error)
         }
     })).catch(util.error)
 })
 
 module.exports = co.wrap(function*(root, info){
     yield copyPosts(root, info).catch(util.error)
-    yield delExtra(root, info).catch(util.error)
     yield replaceVar(root, info).catch(util.error)
+    yield compileJade(root, info).catch(util.error)
+    yield compileLess(root, info).catch(util.error)
+    yield compileCoffee(root, info).catch(util.error)
+    yield delExtra(root, info).catch(util.error)
     console.info('编译完毕～')
 })
 
 const getVar = {
-    "Template.post.layout.dir": function(){
-        return path.join(__dirname, '..', 'template', 'post.jade')
+    "Template.post.layout.dir": function(x){
+        return path.relative(x, path.join(__dirname, '..', 'template', 'post.jade'))
     }
 }
 
 const buildReg = util.memo(function(str){
-    str = str.replace(/\./g,'\\.')
-    return new RegExp('(nattoppet::'+str+')|("-nattoppet::'+str+'-")','g')
+    const escaped = str.replace(/\./g,'\\.')
+    return new RegExp('(nattoppet::'+escaped+')|("-nattoppet::'+escaped+'-")','g')
 })
 
-const isText = function(file){
-    const textSuffixes = ['jade','less','coffee','html','css','js','txt','md','markdown','json','xml','xaml','yml','ini','config','gitignore']
-    return textSuffixes.includes(path.extname(file).slice(1).toLowerCase())
+const hasExtname = function(suffixes){
+    const extractExt = file => path.extname(file).slice(1).toLowerCase()
+    switch(false){
+        case !(suffixes instanceof Set):
+            return file => suffixes.has(extractExt(file))
+        case !(suffixes instanceof Array):
+            return file => suffixes.includes(extractExt(file))
+        case !(typeof suffixes == 'string'):
+            return file => suffixes === extractExt(file)
+    }
+}
+
+const shouldCompileIn = function(post, root, info){
+    const blackList = info.posts[post].info['no-compile']
+    const postDir = path.join(root,'_site',post)
+    if(blackList && blackList.length){
+        return (x) => !blackList.includes(path.relative(postDir, x))
+    }else{
+        return () => true
+    }
 }

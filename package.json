@@ -1,10 +1,28 @@
 {
-  "name": "nattoppet",
-  "version": "0.0.1",
-  "dependencies": {
-    "co": "^4.6.0",
-    "commander": "^2.9.0",
-    "del": "^2.2.0",
-    "mz": "^2.1.0"
-  }
+    "name": "nattoppet",
+    "description": "Yet another tiny static blog generator",
+    "version": "0.0.1",
+    "dependencies": {
+        "co": "^4.6.0",
+        "coffee-script": "^1.10.0",
+        "commander": "^2.9.0",
+        "del": "^2.2.0",
+        "jade": "^1.11.0",
+        "less": "^2.5.3",
+        "mz": "^2.1.0"
+    },
+    "author": {
+        "name": "Jesse Wayne"
+    },
+    "bin": {
+        "nattoppet": "./src/bin.js"
+    },
+    "engines": {
+        "node": ">=5.0.0"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ylxdzsw/nattoppet.git"
+    },
 }
