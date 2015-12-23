@@ -1,7 +1,7 @@
 Nattoppet
 =========
 
-A tiny static blog generator for [my own blog](http://www.ylxdzsw.com)
+A tiny static blog generator for [my own blog](http://ylxdzsw.com/blog)
 
 #### 开发环境
 
