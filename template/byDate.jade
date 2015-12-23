@@ -1,0 +1,10 @@
+extends ./layout.jade
+
+append head
+    title #{me} | ylxdzsw
+
+append body
+    h2= me
+    ul
+        each post in data.byDate[me]
+            li: a(href="../#{post}/#{data.posts[post].info.entry}.html")= post

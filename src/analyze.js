@@ -67,6 +67,7 @@ module.exports = co.wrap(function*(root){
     genByLabel(result)
     genByDate(result)
     console.info('分析完毕～')
+    // console.log(JSON.stringify(result, null, 2))
     return result
 })
 

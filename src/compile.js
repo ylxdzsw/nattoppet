@@ -94,6 +94,50 @@ const delExtra = co.wrap(function*(root, info){
     })).catch(util.error)
 })
 
+// should do more optimization on this function, its ugly
+const compileTemplate = co.wrap(function*(root, info){
+    const mapObj = function(obj){
+        return function(f){
+            const result = {} // there is a fucking bug of co: it checks Objects by `obj.constructor == Object`, so Object.create(null) is not yieldable
+            for(let key in obj){
+                result[key] = f(key, obj[key])
+            }
+            return result
+        }
+    }
+
+    const compileIndex = co(function*(){
+        const source = path.join(__dirname, '..', 'template', 'index.jade')
+        const content = yield fs.readFile(source, 'utf8').catch(util.error)
+        const result = jade.compile(content,{filename:source})({data:info})
+        const dest = path.join(root, '_site', 'index.html')
+        yield fs.writeFile(dest,result).catch(util.error)
+    }).catch(util.error)
+
+    const compileByLabel = mapObj(info.byLabel)(label => co(function*(){
+        const source = path.join(__dirname, '..', 'template', 'byLabel.jade')
+        const content = yield fs.readFile(source, 'utf8').catch(util.error)
+        const result = jade.compile(content,{filename:source})({me:label, data:info})
+        const dest = path.join(root, '_site', 'byLabel', label+'.html')
+        yield fs.writeFile(dest,result).catch(util.error)
+    }).catch(util.error))
+
+    const compileByDate = mapObj(info.byDate)(date => co(function*(){
+        const source = path.join(__dirname, '..', 'template', 'byDate.jade')
+        const content = yield fs.readFile(source, 'utf8').catch(util.error)
+        const result = jade.compile(content,{filename:source})({me:date, data:info})
+        const dest = path.join(root, '_site', 'byDate', date+'.html')
+        yield fs.writeFile(dest,result).catch(util.error)
+    }).catch(util.error))
+
+    yield fs.mkdir(path.join(root, '_site', 'byLabel')).catch(util.error)
+    yield fs.mkdir(path.join(root, '_site', 'byDate')).catch(util.error)
+
+    yield compileIndex
+    yield compileByLabel
+    yield compileByDate
+})
+
 module.exports = co.wrap(function*(root, info){
     yield copyPosts(root, info).catch(util.error)
     yield replaceVar(root, info).catch(util.error)
@@ -101,6 +145,7 @@ module.exports = co.wrap(function*(root, info){
     yield compileLess(root, info).catch(util.error)
     yield compileCoffee(root, info).catch(util.error)
     yield delExtra(root, info).catch(util.error)
+    yield compileTemplate(root, info).catch(util.error)
     console.info('编译完毕～')
 })
 
