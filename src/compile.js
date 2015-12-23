@@ -16,14 +16,14 @@ Array.prototype.includes||(Array.prototype.includes=function(r){var t=Object(thi
 const copyPosts = co.wrap(function*(root, info){
     yield info.postlist.map(post => {
         const src = info.posts[post].addr
-        const dest = path.join(root, '_site', post)
+        const dest = path.join(root, 'blog', post)
         return cp.exec(['cp', '-r', src, dest].join(' ')).catch(util.error)
     })
 })
 
 const replaceVar = co.wrap(function*(root, info){
     const isText = hasExtname(new Set(['jade','less','coffee','html','css','js','md','json']))
-    yield util.walk(path.join(root, '_site'), co.wrap(function*(x, type){
+    yield util.walk(path.join(root, 'blog'), co.wrap(function*(x, type){
         if(type == 'file' && isText(x)){
             const input = yield fs.readFile(x, 'utf8').catch(util.error)
             const result = input.replace(buildReg("Template.post.layout.dir"),getVar["Template.post.layout.dir"](path.dirname(x)))
@@ -36,7 +36,7 @@ const compileJade = co.wrap(function*(root, info){
     const isJade = hasExtname('jade')
     yield info.postlist.map(function(post){
         const shouldCompile = shouldCompileIn(post, root, info)
-        return util.walk(path.join(root, '_site', post), co.wrap(function*(x, type){
+        return util.walk(path.join(root, 'blog', post), co.wrap(function*(x, type){
             if(type == 'file' && isJade(x) && shouldCompile(x)){
                 const input = yield fs.readFile(x, 'utf8').catch(util.error)
                 const result = jade.render(input,{filename:x})
@@ -52,7 +52,7 @@ const compileLess = co.wrap(function*(root, info){
     const isLess = hasExtname('less')
     yield info.postlist.map(function(post){
         const shouldCompile = shouldCompileIn(post, root, info)
-        return util.walk(path.join(root, '_site', post), co.wrap(function*(x, type){
+        return util.walk(path.join(root, 'blog', post), co.wrap(function*(x, type){
             if(type == 'file' && isLess(x) && shouldCompile(x)){
                 const input = yield fs.readFile(x, 'utf8').catch(util.error)
                 const result = (yield less.render(input).catch(util.error)).css
@@ -68,7 +68,7 @@ const compileCoffee = co.wrap(function*(root, info){
     const isCoffee = hasExtname('coffee')
     yield info.postlist.map(function(post){
         const shouldCompile = shouldCompileIn(post, root, info)
-        return util.walk(path.join(root, '_site', post), co.wrap(function*(x, type){
+        return util.walk(path.join(root, 'blog', post), co.wrap(function*(x, type){
             if(type == 'file' && isCoffee(x) && shouldCompile(x)){
                 const input = yield fs.readFile(x, 'utf8').catch(util.error)
                 const result = coffee.compile(input)
@@ -85,9 +85,9 @@ const delExtra = co.wrap(function*(root, info){
         .map(post => info.posts[post])
         .filter(post => post.info['no-copy'] && post.info['no-copy'].length)
         .map(post => co(function*(){
-            yield post.info['no-copy'].map(file => fs.unlink(path.join(root, '_site', post.id, file)).catch(util.error))
+            yield post.info['no-copy'].map(file => fs.unlink(path.join(root, 'blog', post.id, file)).catch(util.error))
         }).catch(util.error))
-    yield util.walk(path.join(root, '_site'), co.wrap(function*(x, type){
+    yield util.walk(path.join(root, 'blog'), co.wrap(function*(x, type){
         if(type == 'file' && path.basename(x) == 'post.json'){
             yield fs.unlink(x).catch(util.error)
         }
@@ -110,7 +110,7 @@ const compileTemplate = co.wrap(function*(root, info){
         const source = path.join(__dirname, '..', 'template', 'index.jade')
         const content = yield fs.readFile(source, 'utf8').catch(util.error)
         const result = jade.compile(content,{filename:source})({data:info})
-        const dest = path.join(root, '_site', 'index.html')
+        const dest = path.join(root, 'blog', 'index.html')
         yield fs.writeFile(dest,result).catch(util.error)
     }).catch(util.error)
 
@@ -118,7 +118,7 @@ const compileTemplate = co.wrap(function*(root, info){
         const source = path.join(__dirname, '..', 'template', 'byLabel.jade')
         const content = yield fs.readFile(source, 'utf8').catch(util.error)
         const result = jade.compile(content,{filename:source})({me:label, data:info})
-        const dest = path.join(root, '_site', 'byLabel', label+'.html')
+        const dest = path.join(root, 'blog', 'byLabel', label+'.html')
         yield fs.writeFile(dest,result).catch(util.error)
     }).catch(util.error))
 
@@ -126,12 +126,12 @@ const compileTemplate = co.wrap(function*(root, info){
         const source = path.join(__dirname, '..', 'template', 'byDate.jade')
         const content = yield fs.readFile(source, 'utf8').catch(util.error)
         const result = jade.compile(content,{filename:source})({me:date, data:info})
-        const dest = path.join(root, '_site', 'byDate', date+'.html')
+        const dest = path.join(root, 'blog', 'byDate', date+'.html')
         yield fs.writeFile(dest,result).catch(util.error)
     }).catch(util.error))
 
-    yield fs.mkdir(path.join(root, '_site', 'byLabel')).catch(util.error)
-    yield fs.mkdir(path.join(root, '_site', 'byDate')).catch(util.error)
+    yield fs.mkdir(path.join(root, 'blog', 'byLabel')).catch(util.error)
+    yield fs.mkdir(path.join(root, 'blog', 'byDate')).catch(util.error)
 
     yield compileIndex
     yield compileByLabel
@@ -174,7 +174,7 @@ const hasExtname = function(suffixes){
 
 const shouldCompileIn = function(post, root, info){
     const blackList = info.posts[post].info['no-compile']
-    const postDir = path.join(root,'_site',post)
+    const postDir = path.join(root,'blog',post)
     if(blackList && blackList.length){
         return (x) => !blackList.includes(path.relative(postDir, x))
     }else{

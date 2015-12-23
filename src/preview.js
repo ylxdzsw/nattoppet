@@ -4,7 +4,7 @@ const spawn = require('child_process').spawn
 
 module.exports = function(){
     const server = spawn('python', "-m http.server 8000".split(' '),
-        {cwd: require('path').resolve('_site')})
+        {cwd: require('path').resolve('blog')})
     server.stderr.on('data', data => console.log(''+ data))
     server.stdout.on('data', data => console.log(''+ data))
     setTimeout(()=>require('openurl').open("http://localhost:8000"), 2000)

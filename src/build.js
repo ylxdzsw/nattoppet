@@ -10,10 +10,10 @@ const util = require('./util.js')
 
 module.exports = co.wrap(function*(opt){
     const dest = opt.dir || '.'
-    if(yield fs.stat(path.join(dest, '_site')).catch(util.nil)){
-        util.error(new Error('_site已存在，请先执行 nattoppet clean'))
+    if(yield fs.stat(path.join(dest, 'blog')).catch(util.nil)){
+        util.error(new Error('blog文件夹已存在，请先执行 nattoppet clean'))
     }else{
-        yield fs.mkdir(path.join(dest, '_site')).catch(util.error)
+        yield fs.mkdir(path.join(dest, 'blog')).catch(util.error)
     }
     yield compile(path.join(dest), yield analyze(dest))
     console.info("构建完毕～")
