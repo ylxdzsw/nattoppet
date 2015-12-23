@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict'
 
-const program = require('commander')
+const Command = require('commander').Command
+const program = new Command('nattoppet')
 const co = require('co')
 
 const util = require('./util.js')
