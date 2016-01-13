@@ -8,6 +8,6 @@ const util = require('./util.js')
 
 module.exports = co.wrap(function*(opt){
     const dest = opt.dir || '.'
-    yield del(path.join(dest, 'blog')).catch(util.error)
+    yield del(path.join(dest, 'build')).catch(util.error)
     console.info('清理完毕～')
 })
