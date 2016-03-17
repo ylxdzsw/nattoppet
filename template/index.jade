@@ -4,6 +4,7 @@ append head
     title fuck
 
 append body
+    h1 Welcome to ylxdzsw's blog
     h2 lateast
     ul
         each post in data.postlist.sort(function(x,y){return new Date(data.posts[x].info.date) < new Date(data.posts[y].info.date)}).slice(0,10)
@@ -12,7 +13,7 @@ append body
     ul
         each posts, label in data.byLabel
             li: a(href="byLabel/#{encodeURIComponent(label)}.html")= label
-    h3 byDate
+    h2 byDate
     ul
         each posts, date in data.byDate
             li: a(href="byDate/#{date}.html")= date
