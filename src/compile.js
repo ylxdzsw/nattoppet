@@ -26,7 +26,7 @@ const replaceVar = co.wrap(function*(root, info){
     yield util.walk(path.join(root, 'posts'), co.wrap(function*(x, type){
         if(type == 'file' && isText(x)){
             const input = yield fs.readFile(x, 'utf8').catch(util.error)
-            const result = input.replace(buildReg("Post.layout.dir"),getVar["Post.layout.dir"](path.dirname(x)))
+            const result = input.replace(buildReg("Template.dir"),getVar["Template.dir"](path.dirname(x)))
             yield fs.writeFile(x,result).catch(util.error)
         }
     })).catch(util.error)
@@ -39,7 +39,7 @@ const compileJade = co.wrap(function*(root, info){
         return util.walk(path.join(root, 'posts', post), co.wrap(function*(x, type){
             if(type == 'file' && isJade(x) && shouldCompile(x)){
                 const input = yield fs.readFile(x, 'utf8').catch(util.error)
-                const result = jade.render(input,{filename:x})
+                const result = jade.compile(input, {filename: x})({data: info.posts[post]})
                 const dest = path.join(path.dirname(x), path.parse(x).name+'.html')
                 yield fs.writeFile(dest,result).catch(util.error)
                 yield fs.unlink(x).catch(util.error)
@@ -95,16 +95,11 @@ const delExtra = co.wrap(function*(root, info){
 })
 
 const compileIndex = co.wrap(function*(root, info){
-    const src = path.join(__dirname, '..', 'view', 'index')
-    const dest = path.join(root, 'nattoppet')
-    yield cp.exec('webpack', {cwd: src}).catch(util.error)
-    yield [
-        cp.exec(['mv', path.join(src, 'index.js'), dest].join(' ')).catch(util.error),
-        cp.exec(['mv', path.join(src, 'index.js.map'), dest].join(' ')).catch(util.error),
-        cp.exec(['cp', path.join(src, 'index.html'), root].join(' ')).catch(util.error),
-        cp.exec(['cp', path.join(src, 'index.css'), dest].join(' ')).catch(util.error),
-        fs.writeFile(path.join(dest, "info.json"), JSON.stringify(info)).catch(util.error)
-    ]
+    const source = path.join(__dirname, '..', 'templates', 'index', 'index.jade')
+    const input = yield fs.readFile(source, 'utf8').catch(util.error)
+    const result = jade.compile(input, {filename: source})({data: info})
+    const dest = path.join(root, 'index.html')
+    yield fs.writeFile(dest, result).catch(util.error)
 })
 
 const compileThemes = co.wrap(function*(root, info){
@@ -125,9 +120,8 @@ module.exports = co.wrap(function*(root, info){
 })
 
 const getVar = {
-    "Post.layout.dir": function(x){
-        return path.relative(x, path.join(__dirname, '..', 'view', 'post', 'layout.jade'))
-    }
+    "Template.dir": x =>
+        path.relative(x, path.join(__dirname, '..', 'templates', 'post'))
 }
 
 const buildReg = util.memo(function(str){

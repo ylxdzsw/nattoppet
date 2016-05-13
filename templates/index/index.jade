@@ -1,0 +1,18 @@
+doctype html
+html(lang="zh_CN")
+    head
+        meta(charset="utf8")
+        meta(http-equiv="X-UA-Compatible",content="IE=edge")
+        meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+        title ylxdzsw's blog
+        <link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+        style
+            include:less index.less
+        script
+            include:coffee-script index.coffee
+    body
+        h1#title stay young, stay naïve
+        hr
+        ul#post-list
+            each post in data.postlist.sort(function(x,y){return new Date(data.posts[x].info.date) < new Date(data.posts[y].info.date)}).slice(0,10)
+                li.post: a(href="/posts/#{post}/#{data.posts[post].info.entry}.html")= data.posts[post].info.title
