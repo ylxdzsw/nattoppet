@@ -7,8 +7,8 @@ const co = require('co')
 
 const util = require('./util.js')
 
-program.version('0.0.1')
-    .option('-d, --dir <path>', 'specify output dir') // TODO
+program.version('0.2.0')
+    .option('-d, --dir <path>', 'specify output dir')
     .option('-r, --repo <url>', 'specify github page repo') //TODO
 
 program.command('clean')

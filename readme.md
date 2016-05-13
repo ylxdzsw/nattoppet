@@ -1,12 +1,12 @@
 Nattoppet
 =========
 
-A tiny static blog generator for [my own blog](http://ylxdzsw.com/blog)
+A tiny static blog generator for [my own blog](http://blog.ylxdzsw.com)
 
 #### 开发环境
 
-- Windows 7 32bit with sp1
-- node.js 5.3.0
+- Windows 10 64bit
+- node.js 5.7.1
 
 #### 使用方法
 
@@ -32,7 +32,7 @@ for more information about nattoppet CLI util, use `nattoppet --help`
     "discription": "hello world!",       // Optional: discription for this post
     "cover": "me.jpg",                   // Optional: cover image for this post
     "no-compile": ["something.coffee"],  // Optional: files that shouldn't compile
-    "no-copy": ["something.md"]          // Optional: files that shouldn't copy to _site
+    "no-copy": ["something.md"]          // Optional: files that shouldn't copy to final site
 }
 ```
 
@@ -42,5 +42,6 @@ Use `nattoppet::xxx` or `"-nattoppet::xxx-"` in files to indicate variable.
 
 Avalables are:
 
-    Template.post.layout.dir - 帖子的模板jade文件地址
-    Package.version - package.json的version字段的值
+    Post.layout.dir - 帖子的模板jade文件地址
+    Theme.koa.dir - koa主题的模板地址
+    Theme.vue.dir - vue主题的模板地址

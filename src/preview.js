@@ -4,8 +4,8 @@ const spawn = require('child_process').spawn
 
 module.exports = function(){
     const server = spawn('python', "-m http.server 8000".split(' '),
-        {cwd: require('path').resolve('build')})
-    server.stderr.on('data', data => console.log(''+ data))
+        {cwd: require('path').resolve('.')})
+    server.stderr.on('data', data => console.error(''+ data))
     server.stdout.on('data', data => console.log(''+ data))
     setTimeout(()=>require('openurl').open("http://localhost:8000"), 2000)
     server.on('close', code => console.log("exit with code:"+code))
