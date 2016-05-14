@@ -103,7 +103,26 @@ const compileIndex = co.wrap(function*(root, info){
 })
 
 const compileThemes = co.wrap(function*(root, info){
-
+    const files = yield fs.readdir(path.join(__dirname, '..', 'templates', 'post')).catch(util.error)
+    yield files.map(function(file){
+        file = path.join(__dirname, '..', 'templates', 'post', file)
+        switch(false){
+            case !(hasExtname('coffee')(file)):
+                return co(function*(){
+                    const input = yield fs.readFile(file, 'utf8').catch(util.error)
+                    const result = coffee.compile(input)
+                    const dest = path.join(root, 'nattoppet', path.parse(file).name+'.js')
+                    yield fs.writeFile(dest, result).catch(util.error)
+                }).catch(util.error)
+            case !(hasExtname('less')(file)):
+                return co(function*(){
+                    const input = yield fs.readFile(file, 'utf8').catch(util.error)
+                    const result = (yield less.render(input).catch(util.error)).css
+                    const dest = path.join(root, 'nattoppet', path.parse(file).name+'.css')
+                    yield fs.writeFile(dest, result).catch(util.error)
+                }).catch(util.error)
+        }
+    })
 })
 
 module.exports = co.wrap(function*(root, info){
@@ -113,7 +132,6 @@ module.exports = co.wrap(function*(root, info){
     yield compileLess(root, info).catch(util.error)
     yield compileCoffee(root, info).catch(util.error)
     yield delExtra(root, info).catch(util.error)
-
     yield compileIndex(root, info).catch(util.error)
     yield compileThemes(root, info).catch(util.error)
     console.info('编译完毕～')

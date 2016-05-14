@@ -1,5 +1,30 @@
-extend ../layout.jade
+extend layout.jade
 
-append head
-    +require("/nattoppet/koa/theme.css")
-    +require("/nattoppet/koa/theme.js")
+block head
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono:400,300|Kalam' rel='stylesheet' type='text/css'>
+    +require("/lib/zepto.js")
+    +require("/nattoppet/koa.css")
+    +require("/nattoppet/koa.js")
+
+mixin title(title, subtitle)
+    section#heading
+        div#title
+            h1= title
+            div= subtitle
+
+mixin section(title)
+    section
+        h2.section-header= title
+        div.content
+            block
+
+block body
+    div#nav
+        a#nav-icon
+            svg(viewBox="0 0 120 120", width="24")
+                g
+                    rect(x="12", y="21", width="96", height="12")
+                    rect(x="12", y="54", width="96", height="12")
+                    rect(x="12", y="87", width="96", height="12")
+        ul#nav-menu
+    block content
