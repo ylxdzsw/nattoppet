@@ -17,7 +17,7 @@ const copyPosts = co.wrap(function*(root, info){
     yield info.postlist.map(post => {
         const src = info.posts[post].addr
         const dest = path.join(root, 'posts', post)
-        return cp.exec(['cp', '-r', src, dest].join(' ')).catch(util.error)
+        return cp.execSync(['cp', '-r', src, dest].join(' '))
     })
 })
 
