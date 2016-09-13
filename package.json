@@ -1,7 +1,7 @@
 {
   "name": "nattoppet",
   "description": "Yet another tiny static blog generator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "dependencies": {
     "co": "^4.6.0",
     "coffee-script": "^1.10.0",
@@ -11,9 +11,11 @@
     "jstransformer-coffee-script": "^1.0.0",
     "jstransformer-less": "^2.1.0",
     "jstransformer-marked": "^1.0.1",
+    "jstransformer-sass": "^0.1.0",
     "less": "^2.5.3",
     "markd": "^1.2.0",
     "mz": "^2.1.0",
+    "node-sass": "^3.9.3",
     "openurl": "^1.1.0"
   },
   "author": {

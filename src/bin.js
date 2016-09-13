@@ -7,7 +7,7 @@ const co = require('co')
 
 const util = require('./util.js')
 
-program.version('0.2.0')
+program.version('0.3.0')
     .option('-d, --dir <path>', 'specify output dir')
     .option('-r, --repo <url>', 'specify github page repo') //TODO
 
@@ -20,12 +20,16 @@ program.command('build')
     .action(require('./build.js'))
 
 program.command('preview')
-    .description('take a look locally by python3 SimpleHTTPServer')
+    .description('take a look locally')
     .action(require('./preview.js'))
 
 program.command('deploy')
     .description('publish to github page')
     .action(require('./deploy.js'))
+
+program.command('bundle <file>')
+    .description('make single html bundle')
+    .action(require('./bundle.js'))
 
 program.command('auto')
     .description('clean, build and preview')
