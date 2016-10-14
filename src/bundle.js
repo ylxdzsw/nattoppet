@@ -17,7 +17,8 @@ const include = file => {
     switch (suffix = path.extname(file).slice(1).toLowerCase()) {
         case 'jade':
             return jade.renderFile(file, {require: include})
-        case 'less':
+        case 'sass':
+        case 'scss':
             return sass.renderSync({file: file, outputStyle: 'compressed'}).css
         case 'coffee':
             return coffee.compile(fs.readFileSync(file, 'utf8'))
