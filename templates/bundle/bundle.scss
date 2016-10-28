@@ -1,7 +1,7 @@
 html {
     font: {
         family: 'Roboto', 'Helvetica', 'Arial', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        size: 18px;
+        size: 24px;
         weight: 400;
     }
     line-height: 1.5;
@@ -54,7 +54,7 @@ h4 {
 }
 
 ul li {
-    font-size: .9rem;
+    font-size: 1.2rem;
 }
 
 p {
@@ -90,6 +90,12 @@ blockquote p {
     text-align: center;
 }
 
+.clear::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .scen {
     margin: 0;
     background-color: #eee;
@@ -104,5 +110,14 @@ blockquote p {
     &.full-height {
         height: 100vh;
         padding: 0;
+    }
+}
+
+@for $i from 1 through 12 {
+    $percentage: $i / 12;
+
+    .col-#{$i} {
+        float: left;
+        width: $percentage * 100%;
     }
 }
