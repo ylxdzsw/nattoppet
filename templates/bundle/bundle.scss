@@ -38,6 +38,10 @@ code {
     }
 }
 
+h1,h2,h3,h4 {
+    color: rgb(66, 184, 166) // rgb(30, 184, 212)
+}
+
 h2 {
     margin-top: 50px;
     font-size: 2rem;
@@ -65,23 +69,34 @@ blockquote p {
     text-indent: 0;
 }
 
+img {
+    &.full {
+        width: 100%;
+    }
+}
+
 .content {
     margin: 0 auto;
-    max-width: 1080px;
+    max-width: 75%;
+}
+
+.content-wide {
+    margin: 0 auto;
+    max-width: 90%;
 }
 
 .title {
     position: absolute;
-    left: 0;
+    left: 10vw;
     top: 50%;
-    width: 100vw;
+    width: 80vw;
     transform: translateY(-50%);
     text-align: center;
     margin: 0;
 
     font: {
         family: 'Zapfino', 'Kalam', cursive;
-        size: 6rem;
+        size: 3.5rem;
         weight: 400;
     }
 }
@@ -97,6 +112,7 @@ blockquote p {
 }
 
 .scen {
+    position: relative;
     margin: 0;
     background-color: #eee;
     transition: background-color 1s ease;
@@ -120,4 +136,8 @@ blockquote p {
         float: left;
         width: $percentage * 100%;
     }
+}
+
+.purple {
+    color: #ae81ff
 }
