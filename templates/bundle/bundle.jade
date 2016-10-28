@@ -5,8 +5,8 @@ html(lang="zh_CN")
         meta(http-equiv="X-UA-Compatible",content="IE=edge")
         meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
         link(rel="stylesheet",href="https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono:400,300|Kalam")
-        style= require("@nattoppet/bundle.scss")
-        script= require("@nattoppet/bundle.coffee")
+        style!= require("@nattoppet/bundle.scss")
+        script!= require("@nattoppet/bundle.coffee")
         block head
     body
         block body
