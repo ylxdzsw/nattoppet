@@ -1,3 +1,15 @@
+@mixin anim($prop, $basetime: 200ms) {
+    transition: $prop 2 * $basetime;
+
+    &.fast {
+        transition: $prop $basetime;
+    }
+
+    &.slow {
+        transition: $prop 3 * $basetime;
+    }
+}
+
 html {
     font: {
         family: 'Roboto', 'Helvetica', 'Arial', 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -101,6 +113,20 @@ img {
     }
 }
 
+.subtitle {
+    position: absolute;
+    right: 10vw;
+    top: 65%;
+    width: 65vw;
+    text-align: right;
+    margin: 0;
+
+    font: {
+        family: serif;
+        size: 2rem;
+    }
+}
+
 .center {
     text-align: center;
 }
@@ -138,6 +164,38 @@ img {
     }
 }
 
-.purple {
-    color: #ae81ff
+@each $name, $color in (plum,       #ae81ff),
+                       (chartreuse, #a6e22e),
+                       (cyan,       #66d9ef),
+                       (tomato,     #f13c1a),
+                       (moccasin,   #ffe4b5) {
+    .#{$name} {
+        color: $color;
+    }
+
+    .fx-#{$name} {
+        @include anim(color);
+
+        &.active {
+           color: $color !important;
+        }
+    }
+}
+
+.slide {
+    @include anim(transform, 300ms);
+    transform: translateX(-100vw);
+
+    &.active {
+        transform: translateX(0);
+    }
+}
+
+.fade {
+    @include anim(opacity);
+    opacity: 0;
+
+    &.active {
+        opacity: 1;
+    }
 }

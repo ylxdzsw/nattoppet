@@ -19,7 +19,7 @@ const include = file => {
             return jade.renderFile(file, {require: include})
         case 'sass':
         case 'scss':
-            return sass.renderSync({file: file, outputStyle: 'compressed'}).css
+            return sass.renderSync({file: file/*, outputStyle: 'compressed'*/}).css
         case 'coffee':
             return coffee.compile(fs.readFileSync(file, 'utf8'))
         case 'md':
