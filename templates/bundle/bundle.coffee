@@ -51,10 +51,10 @@ sr.fx = (timeline, [head, tail...]) ->
         sr.clickListener = cb
     else if head.hasClass 'delay'
         if head.hasClass 'long'
-            setTimeout cb, 900
+            setTimeout cb, 800
         else if head.hasClass 'short'
-            setTimeout cb, 300
+            setTimeout cb, 200
         else
-            setTimeout cb, 600
+            setTimeout cb, 400
     else if head.hasClass 'sim'
         do cb
