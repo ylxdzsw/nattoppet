@@ -3,12 +3,7 @@ Nattoppet
 
 A tiny static blog generator for [my own blog](http://blog.ylxdzsw.com)
 
-#### 开发环境
-
-- Windows 10 64bit
-- node.js 5.7.1
-
-#### 使用方法
+#### Usage
 
 ```
 $ npm install -g nattoppet
@@ -17,7 +12,7 @@ $ nattoppet build
 
 for more information about nattoppet CLI util, use `nattoppet --help`
 
-#### 目录结构
+#### Blog Structure
 
 "A post" means a folder that contains `post.json`. Posts can be placed on directories that are not posts.
 
@@ -34,10 +29,10 @@ for more information about nattoppet CLI util, use `nattoppet --help`
 }
 ```
 
-#### 模板变量
+#### Template Variables
 
 Use `nattoppet::xxx` or `"-nattoppet::xxx-"` in files to indicate variable.
 
 Avalables are:
 
-    Template.dir - 帖子的模板文件夹
+    Template.dir - directory of templates
