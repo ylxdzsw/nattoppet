@@ -131,6 +131,11 @@ img {
     text-align: center;
 }
 
+.vert-span {
+    height: 20px;
+    min-width: 1px;
+}
+
 .clear::after {
     content: "";
     display: table;
@@ -183,7 +188,7 @@ img {
 }
 
 .slide {
-    @include anim(transform, 300ms);
+    @include anim(transform, 200ms);
     transform: translateX(-100vw);
 
     &.active {
