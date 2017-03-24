@@ -13,13 +13,17 @@
 html {
     font: {
         family: 'Roboto', 'Helvetica', 'Arial', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        size: 24px;
+        size: 20px;
         weight: 400;
     }
     line-height: 1.5;
     min-height: 100vh;
 
     color: #233;
+
+    @media (min-width: 1080px) {
+        font-size: 24px;
+    }
 }
 
 body {
@@ -37,10 +41,14 @@ pre {
         top: 1px solid #eee;
         bottom: 1px solid #eee;
     }
-    padding: 25px;
+    padding: 20px;
     font-size: .9rem;
     text-align: left;
     overflow-x: auto;
+
+    @media (min-width: 1080px) {
+        padding: 25px;
+    }
 }
 
 code {
@@ -55,21 +63,21 @@ h1,h2,h3,h4 {
 }
 
 h2 {
-    margin-top: 50px;
+    margin-top: 5vh;
     font-size: 2rem;
 }
 
 h3 {
-    margin-top: 60px;
+    margin-top: 6vh;
     font-size: 1.2rem;
 }
 
 h4 {
-    margin-top: 40px;
+    margin-top: 4vh;
     font-size: 1rem;
 }
 
-ul li {
+ul,ol li {
     font-size: 1.2rem;
 }
 
@@ -89,12 +97,19 @@ img {
 
 .content {
     margin: 0 auto;
-    max-width: 75%;
+    max-width: 90%;
+
+    @media (min-width: 1080px) {
+        max-width: 75%;
+    }
 }
 
 .content-wide {
     margin: 0 auto;
-    max-width: 90%;
+
+    @media (min-width: 1080px) {
+        max-width: 90%;
+    }
 }
 
 .title {
@@ -108,8 +123,11 @@ img {
 
     font: {
         family: cursive;
-        size: 3.5rem;
+        size: 3.2rem;
         weight: 400;
+    }
+    @media (min-width: 1080px) {
+        font-size: 3.5rem;
     }
 }
 
@@ -132,7 +150,7 @@ img {
 }
 
 .vert-span {
-    height: 20px;
+    height: 2vh;
     min-width: 1px;
 }
 
@@ -147,7 +165,7 @@ img {
     margin: 0;
     background-color: #eee;
     transition: background-color 1s ease;
-    padding: 150px 50px;
+    padding: 10vh 2vw;
     min-height: 50vh;
 
     &.active {
@@ -157,6 +175,10 @@ img {
     &.full-height {
         height: 100vh;
         padding: 0;
+    }
+
+    @media (min-width: 1080px) {
+        padding: 150px 50px;
     }
 }
 
