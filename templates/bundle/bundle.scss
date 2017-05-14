@@ -43,6 +43,7 @@ pre {
     }
     padding: 20px;
     font-size: .9rem;
+    line-height: 1.2;
     text-align: left;
     overflow-x: auto;
 
@@ -77,7 +78,7 @@ h4 {
     font-size: 1rem;
 }
 
-ul,ol li {
+ul, ol {
     font-size: 1.2rem;
 }
 
@@ -123,18 +124,15 @@ img {
 
     font: {
         family: cursive;
-        size: 3.2rem;
+        size: 3rem;
         weight: 400;
     }
     @media (min-width: 1080px) {
-        font-size: 3.5rem;
+        font-size: 3.2rem;
     }
 }
 
 .subtitle {
-    position: absolute;
-    right: 10vw;
-    top: 65%;
     width: 65vw;
     text-align: right;
     margin: 0;
@@ -224,5 +222,17 @@ img {
 
     &.active {
         opacity: 1;
+    }
+}
+
+.rise {
+    @include anim(opacity);
+    @include anim(transform);
+    opacity: 0;
+    transform: translateY(10vh);
+
+    &.active {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

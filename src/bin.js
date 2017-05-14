@@ -7,7 +7,7 @@ const co = require('co')
 
 const util = require('./util.js')
 
-program.version('0.3.0')
+program.version('0.4.1')
     .option('-d, --dir <path>', 'specify output dir')
     .option('-r, --repo <url>', 'specify github page repo') //TODO
 
