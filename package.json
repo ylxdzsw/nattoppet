@@ -1,31 +1,25 @@
 {
   "name": "nattoppet",
-  "description": "Yet another tiny static blog generator",
-  "version": "0.4.1",
+  "description": "A tiny HTML bundler and static blog generator",
+  "version": "0.5.0",
   "dependencies": {
-    "co": "^4.6.0",
-    "coffee-script": "^1.10.0",
-    "commander": "^2.9.0",
-    "del": "^2.2.0",
-    "jade": "^1.11.0",
-    "jstransformer-coffee-script": "^1.0.0",
-    "jstransformer-less": "^2.1.0",
-    "jstransformer-marked": "^1.0.1",
-    "jstransformer-sass": "^0.1.0",
-    "less": "^2.5.3",
-    "markd": "^1.2.0",
-    "mz": "^2.1.0",
-    "node-sass": "^3.9.3",
-    "openurl": "^1.1.0"
+    "jstransformer": "^1.0.0",
+    "jstransformer-coffee-script": "^1.1.0",
+    "jstransformer-html-minifier": "^1.1.0",
+    "jstransformer-less": "^2.2.0",
+    "jstransformer-marked": "^1.0.2",
+    "jstransformer-pug": "^0.2.3",
+    "jstransformer-sass": "^0.1.1",
+    "jstransformer-uglify-js": "^1.2.0"
   },
   "author": {
     "name": "Jesse Wayne"
   },
   "bin": {
-    "nattoppet": "./src/bin.js"
+    "nattoppet": "nattoppet.js"
   },
   "engines": {
-    "node": ">=5.0.0"
+    "node": ">=7.6.0"
   },
   "license": "MIT",
   "repository": {
