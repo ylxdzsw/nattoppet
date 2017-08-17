@@ -1,0 +1,238 @@
+@mixin anim($prop, $basetime: 200ms) {
+    transition: $prop 2 * $basetime;
+
+    &.fast {
+        transition: $prop $basetime;
+    }
+
+    &.slow {
+        transition: $prop 3 * $basetime;
+    }
+}
+
+html {
+    font: {
+        family: 'Roboto', 'Helvetica', 'Arial', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        size: 20px;
+        weight: 400;
+    }
+    line-height: 1.5;
+    min-height: 100vh;
+
+    color: #233;
+
+    @media (min-width: 1080px) {
+        font-size: 24px;
+    }
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    overflow: {
+        x: hidden;
+        y: scroll;
+    }
+}
+
+pre {
+    background: white;
+    border: {
+        top: 1px solid #eee;
+        bottom: 1px solid #eee;
+    }
+    padding: 20px;
+    font-size: .9rem;
+    line-height: 1.2;
+    text-align: left;
+    overflow-x: auto;
+
+    @media (min-width: 1080px) {
+        padding: 25px;
+    }
+}
+
+code {
+    font: {
+        family: 'Roboto Mono', 'Menlo', 'Consolas', monospace;
+        size: .9rem;
+    }
+}
+
+h1,h2,h3,h4 {
+    color: rgb(66, 184, 166) // rgb(30, 184, 212)
+}
+
+h2 {
+    margin-top: 5vh;
+    font-size: 2rem;
+}
+
+h3 {
+    margin-top: 6vh;
+    font-size: 1.2rem;
+}
+
+h4 {
+    margin-top: 4vh;
+    font-size: 1rem;
+}
+
+ul, ol {
+    font-size: 1.2rem;
+}
+
+p {
+    text-indent: 2rem;
+}
+
+blockquote p {
+    text-indent: 0;
+}
+
+img {
+    &.full {
+        width: 100%;
+    }
+}
+
+.content {
+    margin: 0 auto;
+    max-width: 90%;
+
+    @media (min-width: 1080px) {
+        max-width: 75%;
+    }
+}
+
+.content-wide {
+    margin: 0 auto;
+
+    @media (min-width: 1080px) {
+        max-width: 90%;
+    }
+}
+
+.title {
+    position: absolute;
+    left: 10vw;
+    top: 50%;
+    width: 80vw;
+    transform: translateY(-50%);
+    text-align: center;
+    margin: 0;
+
+    font: {
+        family: cursive;
+        size: 3rem;
+        weight: 400;
+    }
+    @media (min-width: 1080px) {
+        font-size: 3.2rem;
+    }
+}
+
+.subtitle {
+    width: 65vw;
+    text-align: right;
+    margin: 0;
+
+    font: {
+        family: serif;
+        size: 2rem;
+    }
+}
+
+.center {
+    text-align: center;
+}
+
+.vert-span {
+    height: 2vh;
+    min-width: 1px;
+}
+
+.clear::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.scen {
+    position: relative;
+    margin: 0;
+    background-color: #eee;
+    transition: background-color 1s ease;
+    padding: 10vh 2vw;
+    min-height: 50vh;
+
+    &.active {
+        background-color: white;
+    }
+
+    &.full-height {
+        height: 100vh;
+        padding: 0;
+    }
+
+    @media (min-width: 1080px) {
+        padding: 150px 50px;
+    }
+}
+
+@for $i from 1 through 12 {
+    $percentage: $i / 12;
+
+    .col-#{$i} {
+        float: left;
+        width: $percentage * 100%;
+    }
+}
+
+@each $name, $color in (plum,       #ae81ff),
+                       (chartreuse, #a6e22e),
+                       (cyan,       #66d9ef),
+                       (tomato,     #f13c1a),
+                       (moccasin,   #ffe4b5) {
+    .#{$name} {
+        color: $color;
+    }
+
+    .fx-#{$name} {
+        @include anim(color);
+
+        &.active {
+           color: $color !important;
+        }
+    }
+}
+
+.slide {
+    @include anim(transform, 200ms);
+    transform: translateX(-100vw);
+
+    &.active {
+        transform: translateX(0);
+    }
+}
+
+.fade {
+    @include anim(opacity);
+    opacity: 0;
+
+    &.active {
+        opacity: 1;
+    }
+}
+
+.rise {
+    @include anim(opacity);
+    @include anim(transform);
+    opacity: 0;
+    transform: translateY(10vh);
+
+    &.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

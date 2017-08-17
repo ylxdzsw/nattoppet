@@ -14,30 +14,31 @@ const uglify = transformer(require('jstransformer-uglify-js'))
 
 const compile = file => {
     const suffix = path.extname(file).slice(1).toLowerCase()
-    const _require = y => compile(path.join(path.dirname(file), y))
+    const _require = y => compile(y.startsWith('/') ? y : path.join(path.dirname(file), y))
+    const content = () => fs.readFileSync(file, 'utf8').replace(/@nattoppet/g, path.join(__dirname, 'assets'))
 
     switch (suffix) {
         case 'pug':
         case 'jade':
-            const x = pug.renderFile(file, {filename: file}, {require: _require}).body
+            const x = pug.render(content(), {filename: file, basedir: '/'}, {require: _require}).body
             return minify.render(x, { removeAttributeQuotes:true, removeComments:true }).body
         case 'sass':
         case 'scss':
-            return sass.renderFile(file, {outputStyle: 'compressed'}).body
+            return sass.render(content(), {outputStyle: 'compressed'}).body
         case 'less':
-            return less.renderFile(file, {compress: true}).body
+            return less.render(content(), {compress: true}).body
         case 'coffee':
-            return uglify.render(coffee.renderFile(file).body).body
+            return uglify.render(coffee.render(content()).body).body
         case 'markdown':
         case 'md':
-            return marked.renderFile(file).body
+            return marked.render(content()).body
         case 'png':
         case 'jpg':
         case 'gif':
         case 'jpeg':
             return `data:image/${suffix};base64,` + fs.readFileSync(file, 'base64')
         default:
-            return fs.readFileSync(file, 'utf8')
+            return content()
     }
 }
 
@@ -67,7 +68,7 @@ if (process.argv.length != 3 || opt == "--help") {
     return console.log(`
 nattoppet: A tiny HTML bundler and static blog generator.
 
-  nattoppet file
+  nattoppet file > file.html
 
 Compile file with a special function "require" which you can use inside the jade file. Required file will be \
 bundle into the compiled HTML file directly, with coffee/sass compiled and minified and images base64 encoded.
@@ -88,22 +89,20 @@ if (!fs.existsSync(opt)) {
 const stat = fs.statSync(opt)
 
 if (stat.isFile()) {
-    const html = compile(opt)
-    const dest = path.join(path.dirname(opt), path.parse(opt).name+'.html')
-    fs.writeFileSync(dest, html)
-    console.info('bundle finished')
+    process.stdout.write(compile(opt))
+    console.info("bundle finished")
 } else if (stat.isDirectory()) {
     walk(opt)
     let index = path.join(opt, "index.jade")
     let msg = ''
     if (fs.existsSync(index)) {
-        index = pug.renderFile(index, {filename: index}, {posts: posts}).body
+        index = pug.renderFile(index, {filename: index, basedir: '/'}, {posts: posts}).body
         index = minify.render(index, { removeAttributeQuotes:true, removeComments:true }).body
         fs.writeFileSync("index.html", index)
         msg = "and an index"
     }
     console.info(`build finished, ${posts.length} bundles ${msg} generated`)
 } else {
-    console.error(`$opt should be a text file or a folder`)
+    console.error(`ERROR: $opt should be a text file or a folder`)
 }
 

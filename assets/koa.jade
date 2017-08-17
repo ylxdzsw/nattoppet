@@ -1,0 +1,36 @@
+mixin title(title, subtitle)
+    section#heading
+        div#title
+            h1= title
+            div= subtitle
+
+mixin section(title)
+    section
+        h2.section-header= title
+        div.content
+            block
+
+doctype html
+html(lang="zh_CN")
+    head
+        meta(charset="utf8")
+        meta(http-equiv="X-UA-Compatible",content="IE=edge")
+        meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+        link(href='https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono:400,300|Kalam',rel='stylesheet')
+        script
+            include zepto.js
+        style
+            include:less(compress=true) koa.less
+        script
+            include:coffee-script:uglify-js koa.coffee
+        block head
+    body
+        div#nav
+            a#nav-icon
+                svg(viewBox="0 0 120 120", width="24")
+                    g
+                        rect(x="12", y="21", width="96", height="12")
+                        rect(x="12", y="54", width="96", height="12")
+                        rect(x="12", y="87", width="96", height="12")
+            ul#nav-menu
+        block body
