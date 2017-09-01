@@ -90,7 +90,6 @@ const stat = fs.statSync(opt)
 
 if (stat.isFile()) {
     process.stdout.write(compile(opt))
-    console.info("bundle finished")
 } else if (stat.isDirectory()) {
     walk(opt)
     let index = path.join(opt, "index.jade")
