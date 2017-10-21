@@ -44,17 +44,31 @@ const compile = file => {
 
 const posts = []
 
+const post = x => {
+    x = x.split(path.sep)
+    x = x[x.length-1]
+    posts.push(x)
+    return x
+}
+
 const walk = dir => {
-    const list = fs.readdirSync(dir)
+    const list = fs.readdirSync(dir).sort()
+
     for (let item of list) {
         const stat = fs.statSync(path.join(dir, item))
+
         if (stat.isFile()) {
             if (item == "main.jade" || item == "main.html") {
-                dir = dir.split(path.sep)
-                const name = dir[dir.length-1]
-                posts.push(name)
-                fs.writeFileSync(name + '.html', compile(path.join(...dir, item)))
+                name = post(dir)
+                fs.writeFileSync(name + '.html', compile(path.join(dir, item)))
                 break
+            } else if (item == "main.pdf") {
+                name = post(dir)
+                fs.copyFileSync(path.join(dir, item), name + '.pdf')
+            } else if (item == "main.tex") {
+                for (let postfix of ["aux", "fdb_latexmk", "fls", "log", "pdf", "synctex.gz", "bbl", "idx"]) {
+                    fs.unlink(path.join(dir, "main." + postfix), e=>0)
+                }
             }
         } else if (stat.isDirectory()) {
             walk(path.join(dir, item))
@@ -75,8 +89,8 @@ bundle into the compiled HTML file directly, with coffee/sass compiled and minif
 
   nattoppet folder
 
-Find all "main.jade" insides folder and sub-folders and compile all them. The output HTML's names are the direct \
-folder names. If there being a "index.jade" under the folder, it will be compiled with a variable "posts" witch \
+Find all "main.jade" insides folder recursively and compile all them. The output HTML's names are the direct \
+folder names. If there being an "index.jade" under the folder, it will be compiled with a variable "posts" witch \
 contains all compiled file names.
 
 Outputs will be placed into current work directory
