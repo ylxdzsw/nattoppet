@@ -42,12 +42,12 @@ const compile = file => {
     }
 }
 
-const posts = []
+const posts = new Set()
 
-const post = x => {
+const post = (x, postfix) => {
     x = x.split(path.sep)
-    x = x[x.length-1]
-    posts.push(x)
+    x = x[x.length-1] + '.' + postfix
+    posts.add(x)
     return x
 }
 
@@ -59,14 +59,15 @@ const walk = dir => {
 
         if (stat.isFile()) {
             if (item == "main.jade" || item == "main.html") {
-                name = post(dir)
-                fs.writeFileSync(name + '.html', compile(path.join(dir, item)))
+                const name = post(dir, 'html')
+                fs.writeFileSync(name, compile(path.join(dir, item)))
                 break
             } else if (item == "main.pdf") {
-                name = post(dir)
-                fs.copyFileSync(path.join(dir, item), name + '.pdf')
+                const name = post(dir, 'pdf')
+                fs.copyFileSync(path.join(dir, item), name)
             } else if (item == "main.tex") {
-                for (let postfix of ["aux", "fdb_latexmk", "fls", "log", "pdf", "synctex.gz", "bbl", "idx"]) {
+                post(dir, 'pdf')
+                for (let postfix of ["aux", "fdb_latexmk", "fls", "log", "pdf", "synctex.gz", "bbl", "idx", "out", "blg"]) {
                     fs.unlink(path.join(dir, "main." + postfix), e=>0)
                 }
             }
@@ -109,12 +110,12 @@ if (stat.isFile()) {
     let index = path.join(opt, "index.jade")
     let msg = ''
     if (fs.existsSync(index)) {
-        index = pug.renderFile(index, {filename: index, basedir: '/'}, {posts: posts}).body
+        index = pug.renderFile(index, {filename: index, basedir: '/'}, {posts: [...posts]}).body
         index = minify.render(index, { removeAttributeQuotes:true, removeComments:true }).body
         fs.writeFileSync("index.html", index)
         msg = "and an index"
     }
-    console.info(`build finished, ${posts.length} bundles ${msg} generated`)
+    console.info(`build finished, ${posts.size} bundles ${msg} generated`)
 } else {
     console.error(`ERROR: $opt should be a text file or a folder`)
 }
