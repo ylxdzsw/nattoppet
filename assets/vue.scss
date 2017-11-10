@@ -1,5 +1,5 @@
 html {
-    font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     font-size: 18px;
     line-height: 1.5;
     width: 100%;
@@ -43,7 +43,7 @@ h3 {
         left: -1rem;
         top: 0;
         font-size: 1.2rem;
-        font-weight: 600;
+        font-weight: bold;
 
         @media (max-width: 725px) {
             left: -.8rem;
@@ -62,7 +62,7 @@ pre {
 }
 
 code {
-    font-family: 'Roboto Mono', 'Menlo', 'Consolas', monospace;
+    font-family: 'Source Code Pro', monospace;
     font-size: .8rem;
     padding: .1rem;
     color: #ae81ff;

@@ -16,11 +16,10 @@ html(lang="zh_CN")
         meta(charset="utf8")
         meta(http-equiv="X-UA-Compatible",content="IE=edge")
         meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-        link(href='https://fonts.googleapis.com/css?family=Roboto:400,300,700|Roboto+Mono:400,300|Kalam',rel='stylesheet')
+        style
+            include:sass(outputStyle='compressed') koa.scss
         script
             include zepto.js
-        style
-            include:less(compress=true) koa.less
         script
             include:coffee-script:uglify-js koa.coffee
         block head
@@ -34,3 +33,5 @@ html(lang="zh_CN")
                         rect(x="12", y="87", width="96", height="12")
             ul#nav-menu
         block body
+        style
+            include roboto.css

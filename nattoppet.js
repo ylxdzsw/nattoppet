@@ -67,7 +67,7 @@ const walk = dir => {
                 fs.copyFileSync(path.join(dir, item), name)
             } else if (item == "main.tex") {
                 post(dir, 'pdf')
-                for (let postfix of ["aux", "fdb_latexmk", "fls", "log", "pdf", "synctex.gz", "bbl", "idx", "out", "blg"]) {
+                for (let postfix of ["aux", "fdb_latexmk", "fls", "log", "pdf", "synctex.gz", "synctex(busy)", "bbl", "idx", "out", "blg", "dvi"]) {
                     fs.unlink(path.join(dir, "main." + postfix), e=>0)
                 }
             }
