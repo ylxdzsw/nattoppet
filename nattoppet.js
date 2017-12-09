@@ -15,7 +15,8 @@ const uglify = transformer(require('jstransformer-uglify-js'))
 const compile = file => {
     const suffix = path.extname(file).slice(1).toLowerCase()
     const _require = y => compile(y.startsWith('/') ? y : path.join(path.dirname(file), y))
-    const content = () => fs.readFileSync(file, 'utf8').replace(/@nattoppet/g, path.join(__dirname, 'assets'))
+    const assetpath = path.join(__dirname, 'assets').replace(/(C:\\)|\\/g, '/') // workaround for pug on windows
+    const content = () => fs.readFileSync(file, 'utf8').replace(/@nattoppet/g, assetpath)
 
     switch (suffix) {
         case 'pug':
