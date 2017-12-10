@@ -8,6 +8,7 @@ const pug    = transformer(require('jstransformer-pug'))
 const coffee = transformer(require('jstransformer-coffee-script'))
 const less   = transformer(require('jstransformer-less'))
 const sass   = transformer(require('jstransformer-sass'))
+const scss   = transformer(require('jstransformer-scss'))
 const marked = transformer(require('jstransformer-marked'))
 const minify = transformer(require('jstransformer-html-minifier'))
 const uglify = transformer(require('jstransformer-uglify-js'))
@@ -24,8 +25,9 @@ const compile = file => {
             const x = pug.render(content(), {filename: file, basedir: '/'}, {require: _require}).body
             return minify.render(x, { removeAttributeQuotes:true, removeComments:true }).body
         case 'sass':
-        case 'scss':
             return sass.render(content(), {outputStyle: 'compressed'}).body
+        case 'scss':
+            return scss.render(content(), {outputStyle: 'compressed'}).body
         case 'less':
             return less.render(content(), {compress: true}).body
         case 'coffee':
