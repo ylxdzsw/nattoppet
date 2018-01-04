@@ -6,8 +6,6 @@ const transformer = require('jstransformer')
 
 const pug    = transformer(require('jstransformer-pug'))
 const coffee = transformer(require('jstransformer-coffee-script'))
-const less   = transformer(require('jstransformer-less'))
-const sass   = transformer(require('jstransformer-sass'))
 const scss   = transformer(require('jstransformer-scss'))
 const marked = transformer(require('jstransformer-marked'))
 const minify = transformer(require('jstransformer-html-minifier'))
@@ -24,15 +22,10 @@ const compile = file => {
         case 'jade':
             const x = pug.render(content(), {filename: file, basedir: '/'}, {require: _require}).body
             return minify.render(x, { removeAttributeQuotes:true, removeComments:true }).body
-        case 'sass':
-            return sass.render(content(), {outputStyle: 'compressed'}).body
         case 'scss':
             return scss.render(content(), {outputStyle: 'compressed'}).body
-        case 'less':
-            return less.render(content(), {compress: true}).body
         case 'coffee':
             return uglify.render(coffee.render(content()).body).body
-        case 'markdown':
         case 'md':
             return marked.render(content()).body
         case 'png':
