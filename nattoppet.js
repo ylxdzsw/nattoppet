@@ -38,81 +38,16 @@ const compile = file => {
     }
 }
 
-const posts = new Set()
-
-const post = (x, postfix) => {
-    x = x.split(path.sep)
-    x = x[x.length-1] + '.' + postfix
-    posts.add(x)
-    return x
-}
-
-const walk = dir => {
-    const list = fs.readdirSync(dir).sort()
-
-    for (let item of list) {
-        const stat = fs.statSync(path.join(dir, item))
-
-        if (stat.isFile()) {
-            if (item == "main.jade" || item == "main.html") {
-                const name = post(dir, 'html')
-                fs.writeFileSync(name, compile(path.join(dir, item)))
-                break
-            } else if (item == "main.pdf") {
-                const name = post(dir, 'pdf')
-                fs.copyFileSync(path.join(dir, item), name)
-            } else if (item == "main.tex") {
-                post(dir, 'pdf')
-                for (let postfix of ["aux", "fdb_latexmk", "fls", "log", "pdf", "synctex.gz", "synctex(busy)", "bbl", "idx", "out", "blg", "dvi"]) {
-                    fs.unlink(path.join(dir, "main." + postfix), e=>0)
-                }
-            }
-        } else if (stat.isDirectory()) {
-            walk(path.join(dir, item))
-        }
-    }
-}
-
 const opt = process.argv[2]
 
 if (process.argv.length != 3 || opt == "--help") {
     return console.log(`
-nattoppet: A tiny HTML bundler and static blog generator.
+nattoppet: A tiny HTML bundler.
 
   nattoppet file > file.html
 
 Compile file with a special function "require" which you can use inside the jade file. Required file will be \
 bundle into the compiled HTML file directly, with coffee/sass compiled and minified and images base64 encoded.
-
-  nattoppet folder
-
-Find all "main.jade" insides folder recursively and compile all them. The output HTML's names are the direct \
-folder names. If there being an "index.jade" under the folder, it will be compiled with a variable "posts" witch \
-contains all compiled file names.
-
-Outputs will be placed into current work directory
 `)}
 
-if (!fs.existsSync(opt)) {
-    return console.error("file or folder not exists")
-}
-
-const stat = fs.statSync(opt)
-
-if (stat.isFile()) {
-    process.stdout.write(compile(opt))
-} else if (stat.isDirectory()) {
-    walk(opt)
-    let index = path.join(opt, "index.jade")
-    let msg = ''
-    if (fs.existsSync(index)) {
-        index = pug.renderFile(index, {filename: index, basedir: '/'}, {posts: [...posts]}).body
-        index = minify.render(index, { removeAttributeQuotes:true, removeComments:true }).body
-        fs.writeFileSync("index.html", index)
-        msg = "and an index"
-    }
-    console.info(`build finished, ${posts.size} bundles ${msg} generated`)
-} else {
-    console.error(`ERROR: $opt should be a text file or a folder`)
-}
-
+process.stdout.write(compile(opt))
