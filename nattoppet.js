@@ -64,7 +64,7 @@ nattoppet: A tiny HTML bundler.
 Compile file with a special function "require" which you can use inside the jade file. Required file will be \
 bundle into the compiled HTML file directly, with coffee/sass compiled and minified and images base64 encoded.
 
-Special replacement are performed for "@nattoppet:[file]" and "@nattoppet.[var]". The former will be replaced \
+Special replacements are performed for "@nattoppet:[file]" and "@nattoppet.[var]". The former will be replaced \
 by compiled string of that file, and the latter will be replaced by the content provided as in [opt.json].
 `)}
 

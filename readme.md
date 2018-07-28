@@ -1,7 +1,7 @@
 Nattoppet
 =========
 
-A tiny HTML bundler and static blog generator for [my own blog](http://blog.ylxdzsw.com).
+A tiny HTML bundler and static blog generator for [my own blog](https://blog.ylxdzsw.com).
 
 #### Usage
 
