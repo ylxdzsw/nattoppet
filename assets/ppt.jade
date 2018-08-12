@@ -1,12 +1,9 @@
-extends layout.jade
-
+doctype html
+meta(name="viewport", content="width=device-width,initial-scale=1")
+style
+    include:scss(outputStyle='compressed') ppt.scss
+script
+    include zepto.js
+script
+    include:uglify-js:coffee-script ppt.coffee
 block content
-    style
-        include:scss(outputStyle='compressed') ppt.scss
-    script
-        include zepto.js
-    script
-        include:uglify-js:coffee-script ppt.coffee
-    block head
-
-    block body
