@@ -1,3 +1,5 @@
+extends layout.jade
+
 mixin title(title, subtitle)
     section#heading
         div#title
@@ -10,26 +12,21 @@ mixin section(title)
         div.content
             block
 
-doctype html
-html(lang="zh_CN")
-    head
-        meta(charset="utf8")
-        meta(http-equiv="X-UA-Compatible",content="IE=edge")
-        meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-        style
-            include:scss(outputStyle='compressed') koa.scss
-        script
-            include zepto.js
-        script
-            include:uglify-js:coffee-script koa.coffee
-        block head
-    body
-        div#nav
-            a#nav-icon
-                svg(viewBox="0 0 120 120", width="24")
-                    g
-                        rect(x="12", y="21", width="96", height="12")
-                        rect(x="12", y="54", width="96", height="12")
-                        rect(x="12", y="87", width="96", height="12")
-            ul#nav-menu
-        block body
+block content
+    style
+        include:scss(outputStyle='compressed') koa.scss
+    script
+        include zepto.js
+    script
+        include:uglify-js:coffee-script koa.coffee
+    block head
+
+    div#nav
+        a#nav-icon
+            svg(viewBox="0 0 120 120", width="24")
+                g
+                    rect(x="12", y="21", width="96", height="12")
+                    rect(x="12", y="54", width="96", height="12")
+                    rect(x="12", y="87", width="96", height="12")
+        ul#nav-menu
+    block body

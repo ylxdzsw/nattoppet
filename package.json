@@ -1,7 +1,7 @@
 {
   "name": "nattoppet",
   "description": "A tiny HTML bundler",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "dependencies": {
     "jstransformer": "^1.0.0",
     "jstransformer-coffee-script": "^1.1.0",

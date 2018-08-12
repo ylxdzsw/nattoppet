@@ -1,15 +1,12 @@
-doctype html
-html(lang="zh_CN")
-    head
-        meta(charset="utf8")
-        meta(http-equiv="X-UA-Compatible",content="IE=edge")
-        meta(name="viewport",content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-        style
-            include:scss(outputStyle='compressed') vue.scss
-        script
-            include zepto.js
-        script
-            include:uglify-js:coffee-script vue.coffee
-        block head
-    body
-        block body
+extends layout.jade
+
+block content
+    style
+        include:scss(outputStyle='compressed') vue.scss
+    script
+        include zepto.js
+    script
+        include:uglify-js:coffee-script vue.coffee
+    block head
+
+    block body
