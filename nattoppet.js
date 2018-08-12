@@ -47,6 +47,9 @@ const compile = file => {
         case 'gif':
         case 'jpeg':
             return `data:image/${suffix};base64,` + fs.readFileSync(file, 'base64')
+        case 'blob':
+        case 'bin':
+            return "data:application/octet-stream;base64," + fs.readFileSync(file, 'base64')
         default:
             return content()
     }
