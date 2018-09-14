@@ -1,0 +1,16 @@
+[img]=
+const {opts, args, blocks} = nattoppet_parse()
+
+[h2]
+[h3]
+[h4]
+
+[quote]
+[comment]
+
+
+case 'jpeg':
+            return `data:image/${suffix};base64,` + fs.readFileSync(file, 'base64')
+        case 'blob':
+        case 'bin':
+            return "data:application/octet-stream;base64," + fs.readFileSync(file, 'base64')

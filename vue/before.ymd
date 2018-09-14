@@ -1,0 +1,4 @@
+[doctype html]
+[meta viewport]
+[require](@nattoppet/vue/vue.scss)
+[require](@nattoppet/vue/vue.coffee)
