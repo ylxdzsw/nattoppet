@@ -23,8 +23,8 @@ function move_match(state, reg) {
 const helpers = {
     nattoppet_dir: __dirname,
 
-    nattoppet_parse() {
-        const opts = [], args = [], blocks = []
+    nattoppet_parse(hascontent = false) {
+        const opts = [], args = []
         const parse_option = () => {
             const token = move_match(this.state, /\.([\w\-]+)/g)
             opts.push(token[1])
@@ -35,7 +35,7 @@ const helpers = {
         }
         const parse_block = () => {
             const token = move_match(this.state, />+/g)
-            blocks.push(this.capture_until('<'.repeat(token[0].length)))
+            return this.capture_until('<'.repeat(token[0].length))
         }
 
         while (true) {
@@ -48,21 +48,31 @@ const helpers = {
                     parse_argument()
                     break
                 case '>':
-                    parse_block()
-                    break
+                    return { opts, args, block: parse_block() }
+                case ' ':
+                    if (hascontent)
+                        return { opts, args, block: this.capture_line() }
                 default:
-                    return { opts, args, blocks }
+                    return { opts, args }
             }
         }
     },
 
-    include(file, type='utf8') {
+    read(file, type='utf8') {
         if (file.startsWith('@nattoppet')) {
             file = path.join(this.nattoppet_dir, file.substring(10))
         } else if (!file.startsWith('/')) {
             file = path.join(this.base_dir, file)
         }
         return fs.readFileSync(file, type)
+    },
+
+    extname(file) {
+        return path.extname(file).slice(1)
+    },
+
+    basename(file) {
+        return path.basename(file)
     },
 
     render_coffee(str) {
@@ -90,9 +100,9 @@ const render = file => {
     const theme = seg[seg.length-2]
     const raw = fs.readFileSync(file, 'utf8')
     const html = ['koa', 'ppt', 'vue'].includes(theme)
-        ? render_files(rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
-        : render_files(file, rpath('nattoppet.ymd'))
-    return minify.render(html, { removeAttributeQuotes:true, removeComments:true }).body
+        ? render_files(helpers, rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
+        : render_files(helpers, file, rpath('nattoppet.ymd'))
+    return minify.render(html, { removeAttributeQuotes:true, removeComments:true }).body.trim()
 }
 
 const file = process.argv[2]
