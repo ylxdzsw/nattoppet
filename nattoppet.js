@@ -98,10 +98,11 @@ const rpath = (...x) => path.join(__dirname, ...x)
 const render = file => {
     const seg = path.basename(file).split('.')
     const theme = seg[seg.length-2]
-    const raw = fs.readFileSync(file, 'utf8')
+    const base_dir = path.dirname(path.resolve(file))
+    const env = {base_dir, ...helpers}
     const html = ['koa', 'ppt', 'vue'].includes(theme)
-        ? render_files(helpers, rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
-        : render_files(helpers, file, rpath('nattoppet.ymd'))
+        ? render_files(env, rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
+        : render_files(env, file, rpath('nattoppet.ymd'))
     return minify.render(html, { removeAttributeQuotes:true, removeComments:true }).body.trim()
 }
 

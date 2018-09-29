@@ -1,4 +1,13 @@
-[doctype html]
-[meta viewport]
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="ylxdzsw@gmail.com">
+<title>[title] | ylxdzsw's blog</title>
+
 [require](@nattoppet/koa/koa.scss)
-[require](@nattoppet/koa/koa.coffee)
+
+<section id="title">
+<h1>[title]</h1>
+</section>
+
+[init]
+[init]= this.sections = []
