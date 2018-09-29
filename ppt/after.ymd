@@ -1,1 +1,6 @@
 [section]=
+classes = peek() == '.' ? capture_until(' ').replace('.', ' ') : ''
+const title = capture_line()
+const content = capture_until("[section]", true, true)
+content.trim() ? `<section class="scen${classes}"><h2>${interpret(title)}</h2>${interpret(content)}</section>`
+               : `<section class="scen${classes}"><h1 class="banner">${interpret(title)}</h1></section>`

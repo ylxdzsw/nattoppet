@@ -30,8 +30,8 @@ const helpers = {
             opts.push(token[1])
         }
         const parse_argument = () => {
-            const token = move_match(this.state, /\(.*?\)|{.*?}/g)
-            args.push(token[1])
+            const token = move_match(this.state, /\((.*?)\)|{(.*?)}/g)
+            args.push(token[1] || token[2])
         }
         const parse_block = () => {
             const token = move_match(this.state, />+/g)

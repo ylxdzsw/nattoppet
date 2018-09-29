@@ -20,7 +20,7 @@ html {
 
     color: #233;
 
-    @media (min-width: 1080px) {
+    @media (min-width: 1200px) {
         font-size: 24px;
     }
 }
@@ -46,7 +46,7 @@ pre {
     text-align: left;
     overflow-x: auto;
 
-    @media (min-width: 1080px) {
+    @media (min-width: 1200px) {
         padding: 25px;
     }
 }
@@ -99,27 +99,10 @@ img {
     font-weight: 300;
 }
 
-.content {
-    margin: 0 auto;
-    max-width: 90%;
-
-    @media (min-width: 1080px) {
-        max-width: 75%;
-    }
-}
-
-.content-wide {
-    margin: 0 auto;
-
-    @media (min-width: 1080px) {
-        max-width: 90%;
-    }
-}
-
-.title {
+.banner {
     position: absolute;
     left: 10vw;
-    top: 50%;
+    top: 45%;
     width: 80vw;
     transform: translateY(-50%);
     text-align: center;
@@ -131,19 +114,8 @@ img {
         weight: normal;
     }
 
-    @media (min-width: 1080px) {
+    @media (min-width: 1200px) {
         font-size: 3.2rem;
-    }
-}
-
-.subtitle {
-    width: 65vw;
-    text-align: right;
-    margin: 0;
-
-    font: {
-        family: serif;
-        size: 2rem;
     }
 }
 
@@ -156,31 +128,33 @@ img {
     min-width: 1px;
 }
 
-.clear::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
 .scen {
     position: relative;
     margin: 0;
     background-color: #eee;
     transition: background-color 1s ease;
-    padding: 10vh 2vw;
-    min-height: 50vh;
+    padding: 10vh 8vw;
+    width: 84vw;
+    min-height: 60vh;
 
     &.active {
         background-color: white;
     }
 
-    &.full-height {
-        height: 100vh;
-        padding: 0;
+    &.wide {
+        width: 96vw;
+        padding: 10vh 2vw;
     }
 
-    @media (min-width: 1080px) {
-        padding: 150px 50px;
+    &::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    @media (min-width: 1200px) {
+        width: 76vw;
+        padding: 10vh 12vw;
     }
 }
 
