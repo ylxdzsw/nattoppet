@@ -1,7 +1,7 @@
 {
   "name": "nattoppet",
   "description": "Several themes for [ymd](https://github.com/ylxdzsw/ymd.js).",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "dependencies": {
     "jstransformer": "^1.0.0",
     "jstransformer-coffee-script": "^1.1.0",
