@@ -21,6 +21,7 @@ body {
         height: calc(100vh - 45px);
         column-width: 540px;
         column-gap: 0;
+        column-fill: auto;
     }
 }
 
@@ -49,7 +50,8 @@ h2, h3 {
     position: relative;
     color: #2c3e50;
     margin: 0;
-    padding: .8rem 0 .7rem 0;
+    padding: .8rem 0 0;
+    break-inside: avoid;
 
     &:before {
         content: "#";
@@ -70,11 +72,16 @@ h2, h3 {
     &:hover:before {
         opacity: 1;
     }
+
+    a {
+        color: inherit;
+    }
 }
 
 h2 {
     margin-top: 0;
-    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.7rem;
+    border-bottom: 0.5px solid #ddd;
 
     &:before {
         top: .9rem;
@@ -99,7 +106,6 @@ code {
     font-family: monospace;
     font-size: .8rem;
     padding: .1rem;
-    border-radius: .2rem;
 }
 
 a {
