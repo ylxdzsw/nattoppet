@@ -4,6 +4,7 @@
 <title>[title] | ylxdzsw's blog</title>
 
 [require](@nattoppet/tml/tml.scss)
+[require](@nattoppet/tml/tml.coffee)
 
 [init]
 [init]= this.index = 0; ''
