@@ -29,6 +29,11 @@ section {
     margin: 40px 0 0 15px;
     padding: 0 20px;
 
+    @media (max-width: 725px) {
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+
     &:first-child {
         margin-top: 0;
     }
