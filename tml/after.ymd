@@ -1,0 +1,10 @@
+[section]=
+const id = 'x' + this.index++
+const title = capture_line()
+const header = title.trim() ? `<h2><a id="${id}" href="#${id}">${interpret(title)}</a></h2>` : ''
+const content = capture_until("[section]", true, true)
+;`<section>${header}${interpret(content)}</section>`
+
+[h3]=
+const id = 'x' + this.index++
+`<h3><a id="${id}" href="#${id}">${interpret(capture_line())}</a></h3>`

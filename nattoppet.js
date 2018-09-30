@@ -100,7 +100,7 @@ const render = file => {
     const theme = seg[seg.length-2]
     const base_dir = path.dirname(path.resolve(file))
     const env = {base_dir, ...helpers}
-    const html = ['koa', 'ppt', 'vue'].includes(theme)
+    const html = ['koa', 'ppt', 'vue', 'tml'].includes(theme)
         ? render_files(env, rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
         : render_files(env, file, rpath('nattoppet.ymd'))
     return minify.render(html, { removeAttributeQuotes:true, removeComments:true }).body.trim()
@@ -109,6 +109,6 @@ const render = file => {
 const file = process.argv[2]
 
 if (process.argv.length != 3 || file == "--help")
-    return console.log("Usage: nattoppet file.{koa,ppt,vue}.ymd > file.html")
+    return console.log("Usage: nattoppet file.{koa,ppt,vue,tml}.ymd > file.html")
 
 process.stdout.write(render(file))
