@@ -94,6 +94,10 @@ blockquote p {
     text-align: center;
     position: relative;
 
+    @media (max-width: 625px) {
+        height: 40vh;
+    }
+
     h1 {
         position: absolute;
         top: 45%;
@@ -106,7 +110,7 @@ blockquote p {
         font-weight: normal;
 
         @media (max-width: 625px) {
-            font-size: 4rem;
+            font-size: 3rem;
         }
     }
 }

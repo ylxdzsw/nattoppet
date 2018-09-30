@@ -2,52 +2,65 @@ html {
     font-family: sans-serif;
     font-size: 18px;
     line-height: 1.5;
-    width: 100%;
-    height: 100%;
+    text-align: justify;
 
-    background: white;
     color: #33333d;
 
     -webkit-user-select: none;
 
-    @media (max-width: 725px) {
+    @media (max-width: 625px) {
         font-size: 14px;
-        text-align: justify;
     }
 }
 
 body {
-    max-width: 1000px;
+    max-width: 1170px;
     margin: 0 auto;
     padding: 15px;
 }
 
-h2 h3 h4 {
-    color: #2c3e50;
-}
-
-h2 {
-    margin: 2rem 0 .8rem 0;
-    padding-bottom: .7rem;
-    border-bottom: 1px solid #ddd;
-}
-
-h3 {
+h2, h3 {
     position: relative;
-    margin: 3rem 0 1.2rem 0;
+    margin: 0;
+    padding: .8rem 0 0;
 
     &:before {
         content: "#";
         color: #42b983;
         position: absolute;
         left: -1rem;
-        top: 0;
+        top: .75rem;
         font-size: 1.2rem;
         font-weight: bold;
+        opacity: 0;
 
-        @media (max-width: 725px) {
+        @media (max-width: 625px) {
             left: -.8rem;
-            top: -.05rem;
+            top: .85rem;
+        }
+    }
+
+    &:hover:before {
+        opacity: 1;
+    }
+
+    a {
+        color: #2c3e50;
+    }
+}
+
+h2 {
+    margin-top: 0;
+    padding-bottom: 0.7rem;
+    border-bottom: 0.5px solid #ddd;
+
+    &:before {
+        top: .9rem;
+        font-size: 1.4rem;
+
+        @media (max-width: 625px) {
+            left: -.8rem;
+            top: 1rem;
         }
     }
 }
@@ -57,17 +70,13 @@ p {
 }
 
 pre {
-    text-align: left;
-    background-color: #fcfcfa;
+    background-color: #fafaf9;
 }
 
 code {
     font-family: monospace;
     font-size: .8rem;
     padding: .1rem;
-    color: #ae81ff;
-    background-color: #fcfcfa;
-    border-radius: .2rem;
 }
 
 ul ol {

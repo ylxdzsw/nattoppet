@@ -1,0 +1,7 @@
+[h2]=
+const id = 'x' + this.index++
+`<h2><a id="${id}" href="#${id}">${interpret(capture_line())}</a></h2>`
+
+[h3]=
+const id = 'x' + this.index++
+`<h3><a id="${id}" href="#${id}">${interpret(capture_line())}</a></h3>`
