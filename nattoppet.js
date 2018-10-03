@@ -89,7 +89,7 @@ const helpers = {
 }
 
 function render_files(env, ...files) {
-    const str = files.map(x=>fs.readFileSync(x, 'utf8')).reduce((x, y) => x + y)
+    const str = files.map(x=>fs.readFileSync(x, 'utf8')).reduce((x, y) => x + '\n\n' + y)
     return ymd.render(str, null, env).body
 }
 
