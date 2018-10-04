@@ -18,10 +18,11 @@ switch (extname(file)) {
 
 [img]=
 const {opts, args: [file, alt]} = nattoppet_parse()
-const class = opts.join(' ')
-const content = `data:image/${extname(file)};base64,` + read(file, 'base64')
+const classes = opts.join(' ')
+const mimesuf = extname(file) == 'svg' ? 'svg+xml' : extname(file)
+const content = `data:image/${mimesuf};base64,` + read(file, 'base64')
 const alttext = alt ? `alt="${alt}"` : ''
-;`<img class="${class}" src="${content}" alt="${alttext}"/>`
+;`<img class="${classes}" src="${content}" alt="${alttext}"/>`
 
 [h2]= `<h2>${interpret(capture_line())}</h2>`
 [h3]= `<h3>${interpret(capture_line())}</h3>`
@@ -46,3 +47,12 @@ const content = "data:application/octet-stream;base64," + read(file, 'base64')
 const {opts: [language], args: [content], block} = nattoppet_parse()
 const code = `<code ${language ? `class="language-${language}"` : ''}>${content || block}</code>`
 content ? code : `<pre>${code}</pre>`
+
+[link]=
+const {opts: [id], args: [href, text]} = nattoppet_parse()
+const content = text || capture_line().trim() || href
+;`<a ${id ? `id="${id}"` : ''} href="${href}">${interpret(content)}</a>`
+
+[sup]=
+const {args: [text]} = nattoppet_parse()
+;`<sup>${interpret(text)}</sup>`

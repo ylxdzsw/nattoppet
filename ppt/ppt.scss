@@ -58,7 +58,7 @@ code {
     }
 }
 
-h1,h2,h3,h4 {
+h1,h2,h3 {
     color: rgb(66, 184, 166) // rgb(30, 184, 212)
 }
 
@@ -72,11 +72,6 @@ h3 {
     font-size: 1.2rem;
 }
 
-h4 {
-    margin-top: 4vh;
-    font-size: 1rem;
-}
-
 p {
     text-indent: 2rem;
 }
@@ -86,17 +81,21 @@ blockquote p {
 }
 
 img {
+    max-width: 100%;
+
     &.full {
         width: 100%;
     }
 }
 
-.key {
+li {
     font-size: 1.2rem;
 }
 
-.light {
+footer {
     font-weight: 300;
+    font-size: 0.7rem;
+    color: #888;
 }
 
 .banner {
@@ -119,13 +118,12 @@ img {
     }
 }
 
-.center {
-    text-align: center;
-}
+a {
+    text-decoration: none;
 
-.vert-span {
-    height: 2vh;
-    min-width: 1px;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .scen {

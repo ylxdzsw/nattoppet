@@ -4,3 +4,11 @@ const title = capture_line()
 const content = capture_until("[section]", true, true)
 content.trim() ? `<section class="scen${classes}"><h2>${interpret(title)}</h2>${interpret(content)}</section>`
                : `<section class="scen${classes}"><h1 class="banner">${interpret(title)}</h1></section>`
+
+[foot]=
+const content = capture_line()
+;`<footer>${interpret(content)}</footer>`
+
+[span]=
+const {args:[length]} = nattoppet_parse()
+;`<div style="height: ${length}; min-width: 1px"></div>`
