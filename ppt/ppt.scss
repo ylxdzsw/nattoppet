@@ -86,6 +86,14 @@ img {
     &.full {
         width: 100%;
     }
+
+    &.small {
+        width: 40%;
+    }
+
+    &.big {
+        width: 80%;
+    }
 }
 
 li {

@@ -22,7 +22,8 @@ const classes = opts.join(' ')
 const mimesuf = extname(file) == 'svg' ? 'svg+xml' : extname(file)
 const content = `data:image/${mimesuf};base64,` + read(file, 'base64')
 const alttext = alt ? `alt="${alt}"` : ''
-;`<img class="${classes}" src="${content}" alt="${alttext}"/>`
+const htmltag = `<img class="${classes}" src="${content}" alt="${alttext}"/>`
+opts.includes('center') ? `<div style="text-align:center">${htmltag}</div>` : htmltag
 
 [h2]= `<h2>${interpret(capture_line())}</h2>`
 [h3]= `<h3>${interpret(capture_line())}</h3>`
