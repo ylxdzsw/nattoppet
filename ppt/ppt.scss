@@ -89,6 +89,10 @@ img {
 
     &.small {
         width: 40%;
+
+        @media (max-width: 625px) {
+            width: 60%;
+        }
     }
 
     &.mid {
