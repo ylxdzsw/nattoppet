@@ -14,8 +14,7 @@ html {
 }
 
 body {
-    margin: 0;
-    padding: 15px 0;
+    margin: 15px 0;
 
     @media (min-width: 1200px) {
         height: calc(100vh - 45px);
@@ -131,9 +130,26 @@ blockquote {
     }
 }
 
+img {
+    break-inside: avoid;
+}
+
+.full {
+    display: block;
+    margin: 1rem 0;
+    width: 100%;
+}
+
+.half {
+    display: block;
+    margin: 1rem 0;
+    width: 50%;
+}
+
 .end-symbol {
     text-align: center;
     display: none;
+    margin-top: 1rem;
 
     @media (min-width: 1200px) {
         display: block;
