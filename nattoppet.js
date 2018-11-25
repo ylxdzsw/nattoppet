@@ -61,7 +61,7 @@ const helpers = {
     read(file, type='utf8') {
         if (file.startsWith('@nattoppet')) {
             file = path.join(this.nattoppet_dir, file.substring(10))
-        } else if (!file.startsWith('/')) {
+        } else if (!path.isAbsolute(file)) {
             file = path.join(this.base_dir, file)
         }
         return fs.readFileSync(file, type)
