@@ -46,7 +46,7 @@ const content = "data:application/octet-stream;base64," + read(file, 'base64')
 
 [code]=
 const {opts: [language], args: [content], block} = nattoppet_parse()
-const code = `<code ${language ? `class="language-${language}"` : ''}>${content || block}</code>`
+const code = `<code ${language ? `class="language-${language}"` : ''}>${content || block.slice(1)}</code>`
 content ? code : `<pre>${code}</pre>`
 
 [link]=
