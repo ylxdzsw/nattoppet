@@ -12,6 +12,8 @@ const scss   = transformer(require('jstransformer-scss'))
 const marked = transformer(require('jstransformer-marked'))
 const minify = transformer(require('jstransformer-html-minifier'))
 const uglify = transformer(require('jstransformer-uglify-js'))
+// the jstransformer version of katex is unmaintained
+const katex = require("katex")
 
 function move_match(state, reg) {
     reg.lastIndex = state.i
@@ -85,6 +87,10 @@ const helpers = {
 
     render_markdown(str) {
         return marked.render(str).body
+    },
+
+    render_katex(str, displayMode = false) {
+        return katex.renderToString(str, { displayMode })
     }
 }
 

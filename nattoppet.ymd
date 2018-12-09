@@ -57,3 +57,11 @@ const content = text || capture_line().trim() || href
 [sup]=
 const {args: [text]} = nattoppet_parse()
 ;`<sup>${interpret(text)}</sup>`
+
+[$]=
+const tex = capture_until('$')
+render_katex(tex, false)
+
+[$$]=
+const {block} = nattoppet_parse(true)
+render_katex(block, true)
