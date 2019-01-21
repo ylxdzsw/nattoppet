@@ -1,7 +1,7 @@
 {
   "name": "nattoppet",
   "description": "Several themes for [ymd](https://github.com/ylxdzsw/ymd.js).",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "dependencies": {
     "jstransformer": "^1.0.0",
     "jstransformer-coffee-script": "^1.1.0",
@@ -16,7 +16,8 @@
     "name": "Jesse Wayne"
   },
   "bin": {
-    "nattoppet": "./nattoppet.js"
+    "nattoppet": "./nattoppet.js",
+    "nattoppet-dev": "./nattoppet_dev.js"
   },
   "engines": {
     "node": ">=7.6.0"
