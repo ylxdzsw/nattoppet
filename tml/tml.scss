@@ -8,6 +8,8 @@ html {
 
     -webkit-user-select: none;
 
+    hyphens: auto;
+
     @media (max-width: 625px) {
         font-size: 14px;
     }
