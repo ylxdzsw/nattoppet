@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const transformer = require('jstransformer')
 
-const ymd    = transformer(require('jstransformer-ymd'))
+const ymd    = require('./ymd')
 const coffee = transformer(require('jstransformer-coffee-script'))
 const scss   = transformer(require('jstransformer-scss'))
 const marked = transformer(require('jstransformer-marked'))
@@ -96,7 +96,7 @@ const helpers = {
 
 function render_files(env, ...files) {
     const str = files.map(x=>fs.readFileSync(x, 'utf8')).reduce((x, y) => x + '\n\n' + y)
-    return ymd.render(str, null, env).body
+    return ymd.render(str, env)
 }
 
 const rpath = (...x) => path.join(__dirname, ...x)
