@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@nattoppet/koa/koa.scss)
+[require](@nattoppet/koa/koa.less)
 
 <section id="title">
 <h1>[title]</h1>

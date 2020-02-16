@@ -4,14 +4,12 @@
 
 const fs = require('fs')
 const path = require('path')
-const transformer = require('jstransformer')
 
 const ymd    = require('./ymd')
-const coffee = transformer(require('jstransformer-coffee-script'))
-const scss   = transformer(require('jstransformer-scss'))
-const marked = transformer(require('jstransformer-marked'))
-const minify = transformer(require('jstransformer-html-minifier'))
-const uglify = transformer(require('jstransformer-uglify-js'))
+const coffee = require('coffeescript')
+const less   = require('less')
+const marked = require('marked')
+const minify = require('html-minifier').minify
 // the jstransformer version of katex is unmaintained
 const katex = require("katex")
 
@@ -78,15 +76,17 @@ const helpers = {
     },
 
     render_coffee(str) {
-        return uglify.render(coffee.render(str).body).body
+        return coffee.compile(str)
     },
 
-    render_scss(str) {
-        return scss.render(str, {outputStyle: 'compressed'}).body
+    render_less(str) {
+        let x; less.render(str, {}, (err, out) => !err && (x = out))
+        if (!x) throw "less failed to compile synchronously"
+        return x.css
     },
 
     render_markdown(str) {
-        return marked.render(str).body
+        return marked(str)
     },
 
     render_katex(str, displayMode = false) {
@@ -109,7 +109,15 @@ const render = file => {
     const html = ['koa', 'ppt', 'vue', 'tml'].includes(theme)
         ? render_files(env, rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
         : render_files(env, file, rpath('nattoppet.ymd'))
-    return minify.render(html, { removeAttributeQuotes:true, removeComments:true }).body.trim()
+    return minify(html, {
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        removeOptionalTags: true,
+        minifyCSS: true,
+        minifyJS: true,
+    })
 }
 
 const file = process.argv[2]

@@ -2,8 +2,8 @@
 const {args: [file]} = nattoppet_parse()
 const content = read(file)
 switch (extname(file)) {
-    case 'scss':
-        `<style>${render_scss(content)}</style>`; break
+    case 'less':
+        `<style>${render_less(content)}</style>`; break
     case 'css':
         `<style>${content}</style>`; break
     case 'coffee':
