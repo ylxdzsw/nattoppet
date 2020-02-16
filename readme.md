@@ -1,13 +1,14 @@
 Nattoppet
 =========
 
-Several themes for [ymd](https://github.com/ylxdzsw/ymd.js) that are used in [my blog](https://blog.ylxdzsw.com).
+A tiny markup language and several "stdlib" themes for making documents and slides as single-file bundled html.
 
 #### Usage
 
+No installation required using `npx`:
+
 ```
-$ npm install -g nattoppet
-$ nattoppet file.ppt.ymd
+$ npx nattoppet file.ppt.ymd
 ```
 
-for more information about nattoppet CLI util, use `nattoppet --help`.
+for more information about nattoppet CLI util, try `npx nattoppet --help`.
