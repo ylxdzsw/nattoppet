@@ -5,13 +5,13 @@
 const file = process.argv[2]
 
 if (process.argv.length != 3 || file == "--help")
-    return console.log("Usage: nattoppet-dev file.{koa,ppt,vue,tml}.ymd")
+    return console.log("Usage: ymd-dev [file]")
 
 const fs = require('fs')
 const cp = require('child_process')
 const http = require('http')
 
-let content = "nattoppet start watching..."
+let content = "start watching..."
 let busy = 0
 let queued = false
 let lastevent = Date.now()
@@ -22,7 +22,7 @@ const done = () => {
 }
 
 const start = () => {
-    const child = cp.spawn(__dirname + '/nattoppet.js', [file])
+    const child = cp.spawn(__dirname + '/ymd.js', [file])
     let buffer = ''
     child.stdout.on('data', chunk => buffer += chunk)
     child.on('close', code => {

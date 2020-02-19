@@ -5,13 +5,12 @@
 const fs = require('fs')
 const path = require('path')
 
-const ymd    = require('./ymd')
+const compiler = require('./compiler')
+const stdlib = require('./stdlib')
 const coffee = require('coffeescript')
-const less   = require('less')
 const marked = require('marked')
-const minify = require('html-minifier').minify
-// the jstransformer version of katex is unmaintained
 const katex = require("katex")
+const less = require('less')
 
 function move_match(state, reg) {
     reg.lastIndex = state.i
@@ -21,9 +20,42 @@ function move_match(state, reg) {
 }
 
 const helpers = {
-    nattoppet_dir: __dirname,
+    capture_block() {
+        const i = next_match(this.state.str, /^\n/gm, this.state.i).index
+        const content = this.state.str.substring(this.state.i, i)
+        this.state.i = i
+        return content
+    },
 
-    nattoppet_parse(hascontent = false) {
+    capture_until(delimiter, keep=false, eof=false) {
+        let i = this.state.str.indexOf(delimiter, this.state.i)
+        if (i == -1)
+            if (eof)
+                i = this.state.str.length
+            else
+                throw new RangeError("string ends without seeing delimiter " + delimiter)
+        const content = this.state.str.substring(this.state.i, i)
+        this.state.i = i + (keep ? 0 : delimiter.length)
+        return content
+    },
+
+    capture_line() {
+        return this.capture_until('\n', false, true)
+    },
+
+    peek() {
+        return this.state.str[this.state.i]
+    },
+
+    skip(n=1) {
+        this.state.i += n
+    }
+}
+
+exports = {
+    std_dir: __dirname,
+
+    parse(hascontent = false) {
         const opts = [], args = []
         const parse_option = () => {
             const token = move_match(this.state, /\.([\w\-]+)/g)
@@ -59,8 +91,8 @@ const helpers = {
     },
 
     read(file, type='utf8') {
-        if (file.startsWith('@nattoppet')) {
-            file = path.join(this.nattoppet_dir, file.substring(10))
+        if (file.startsWith('@std')) {
+            file = path.join(this.std_dir, file.substring(4))
         } else if (!path.isAbsolute(file)) {
             file = path.join(this.base_dir, file)
         }
@@ -93,36 +125,3 @@ const helpers = {
         return katex.renderToString(str, { displayMode })
     }
 }
-
-function render_files(env, ...files) {
-    const str = files.map(x=>fs.readFileSync(x, 'utf8')).reduce((x, y) => x + '\n\n' + y)
-    return ymd.render(str, env)
-}
-
-const rpath = (...x) => path.join(__dirname, ...x)
-
-const render = file => {
-    const seg = path.basename(file).split('.')
-    const theme = seg[seg.length-2]
-    const base_dir = path.dirname(path.resolve(file))
-    const env = {base_dir, ...helpers}
-    const html = ['koa', 'ppt', 'vue', 'tml'].includes(theme)
-        ? render_files(env, rpath(theme, 'before.ymd'), file, rpath(theme, 'after.ymd'), rpath('nattoppet.ymd'))
-        : render_files(env, file, rpath('nattoppet.ymd'))
-    return minify(html, {
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-        removeComments: true,
-        removeRedundantAttributes: true,
-        removeOptionalTags: true,
-        minifyCSS: true,
-        minifyJS: true,
-    })
-}
-
-const file = process.argv[2]
-
-if (process.argv.length != 3 || file == "--help")
-    return console.log("Usage: nattoppet file.{koa,ppt,vue,tml}.ymd > file.html")
-
-process.stdout.write(render(file))
