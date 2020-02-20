@@ -4,7 +4,7 @@ const vm = require("vm")
 
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
-const tokenize = str => {
+const tokenize = (str, rpath=x=>x) => {
     const tokens = []
 
     while (true) {
@@ -41,15 +41,15 @@ const tokenize = str => {
 
     for (let i = 0; i < tokens.length; i++) if (tokens[i].type == 'mixin') {
         const fs = require('fs')
-        const path = tokens[i].path
+        const path = rpath(tokens[i].path)
         const stat = fs.statSync(path)
         if (stat.isDirectory()) { // include before and after
-            const before = tokenize(fs.readFileSync(path + '/before.ymd', 'utf8'))
-            const after = tokenize(fs.readFileSync(path + '/after.ymd', 'utf8'))
+            const before = tokenize(fs.readFileSync(path + '/before.ymd', 'utf8'), rpath)
+            const after = tokenize(fs.readFileSync(path + '/after.ymd', 'utf8'), rpath)
             tokens.splice(i, 1, ...before)
             tokens.push(...after)
         } else {
-            const mixins = tokenize(fs.readFileSync(path, 'utf8'))
+            const mixins = tokenize(fs.readFileSync(path, 'utf8'), rpath)
             tokens.splice(i, 1, ...mixins)
         }
         i -= 1 // revisit i since we replaced it
@@ -92,7 +92,7 @@ exports.compile = (str, locals={}) => {
     for (const k in env) if (typeof(env[k]) == 'function')
         env[k] = env[k].bind(env)
 
-    let tokens = tokenize(str)
+    let tokens = tokenize(str, env.rpath)
     let output = ''
     while (true) {
         const token = tokens.shift()

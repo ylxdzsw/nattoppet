@@ -1,5 +1,5 @@
 [require]=
-const {args: [file]} = nattoppet_parse()
+const {args: [file]} = std_call()
 const content = read(file)
 switch (extname(file)) {
     case 'less':
@@ -17,7 +17,7 @@ switch (extname(file)) {
 }
 
 [img]=
-const {opts, args: [file, alt]} = nattoppet_parse()
+const {opts, args: [file, alt]} = std_call()
 const classes = opts.join(' ')
 const mimesuf = extname(file) == 'svg' ? 'svg+xml' : extname(file)
 const content = `data:image/${mimesuf};base64,` + read(file, 'base64')
@@ -30,32 +30,32 @@ opts.includes('center') ? `<div style="text-align:center">${htmltag}</div>` : ht
 [h4]= `<h4>${interpret(capture_line())}</h4>`
 
 [quote]=
-const {block} = nattoppet_parse(true)
+const {block} = std_call(true)
 ;`<blockquote>${interpret(block)}</blockquote>`
 
-[#]= nattoppet_parse(true), ''
+[#]= std_call(true), ''
 
 [-]=
-const {opts, block} = nattoppet_parse(true)
+const {opts, block} = std_call(true)
 ;`<li class="${opts.join(' ')}">${interpret(block)}</li>`
 
 [file]=
-const {args: [file, text]} = nattoppet_parse()
+const {args: [file, text]} = std_call()
 const content = "data:application/octet-stream;base64," + read(file, 'base64')
 ;`<a download="${basename(file)}" href="${content}">${text ? interpret(text) : basename(file)}</a>`
 
 [code]=
-const {opts: [language], args: [content], block} = nattoppet_parse()
+const {opts: [language], args: [content], block} = std_call()
 const code = `<code ${language ? `class="language-${language}"` : ''}>${content || block.slice(1)}</code>`
 content ? code : `<pre>${code}</pre>`
 
 [link]=
-const {opts: [id], args: [href, text]} = nattoppet_parse()
+const {opts: [id], args: [href, text]} = std_call()
 const content = text || capture_line().trim() || href
 ;`<a ${id ? `id="${id}"` : ''} href="${href}">${interpret(content)}</a>`
 
 [sup]=
-const {args: [text]} = nattoppet_parse()
+const {args: [text]} = std_call()
 ;`<sup>${interpret(text)}</sup>`
 
 [$]=
@@ -63,5 +63,5 @@ const tex = capture_until('$')
 render_katex(tex, false)
 
 [$$]=
-const {block} = nattoppet_parse(true)
+const {block} = std_call(true)
 render_katex(block, true)

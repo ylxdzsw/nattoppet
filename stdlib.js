@@ -62,13 +62,17 @@ exports = {
         }
     },
 
-    read(file, encoding='utf8') {
+    rpath(file) {
         if (file.startsWith('@std')) {
-            file = path.join(this.stdlib_dir, file.substring(4))
+            return path.join(this.stdlib_dir, file.substring(4))
         } else if (!path.isAbsolute(file)) {
-            file = path.join(this.base_dir, file)
+            return path.join(this.base_dir, file)
         }
-        return fs.readFileSync(file, encoding)
+        return file
+    },
+
+    read(file, encoding='utf8') {
+        return fs.readFileSync(this.rpath(file), encoding)
     },
 
     extname(file) {
