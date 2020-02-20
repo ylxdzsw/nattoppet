@@ -10,7 +10,7 @@ const marked = require('marked')
 const katex = require("katex")
 const less = require('less')
 
-exports = {
+module.exports = {
     stdlib_dir: __dirname,
 
     capture_until(delimiter) {

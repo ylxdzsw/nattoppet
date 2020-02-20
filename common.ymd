@@ -25,9 +25,9 @@ const alttext = alt ? `alt="${alt}"` : ''
 const htmltag = `<img class="${classes}" src="${content}" alt="${alttext}"/>`
 opts.includes('center') ? `<div style="text-align:center">${htmltag}</div>` : htmltag
 
-[h2]= `<h2>${interpret(capture_line())}</h2>`
-[h3]= `<h3>${interpret(capture_line())}</h3>`
-[h4]= `<h4>${interpret(capture_line())}</h4>`
+[h2]= `<h2>${interpret(capture_until('\n'))}</h2>`
+[h3]= `<h3>${interpret(capture_until('\n'))}</h3>`
+[h4]= `<h4>${interpret(capture_until('\n'))}</h4>`
 
 [quote]=
 const {block} = std_call(true)
@@ -51,7 +51,7 @@ content ? code : `<pre>${code}</pre>`
 
 [link]=
 const {opts: [id], args: [href, text]} = std_call()
-const content = text || capture_line().trim() || href
+const content = text || capture_until('\n').trim() || href
 ;`<a ${id ? `id="${id}"` : ''} href="${href}">${interpret(content)}</a>`
 
 [sup]=
