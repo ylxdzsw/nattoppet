@@ -2,19 +2,26 @@
 
 const vm = require("vm")
 
-const def_pattern = /^\[(.+?)\]([:=])/m
+const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
 const tokenize = str => {
     const tokens = []
 
     while (true) {
-        if (!str) return tokens
-
-        const m = str.match(def_pattern)
-        if (!m) return [...tokens, { type: 'text', content: str }]
+        const m = str.match(pattern)
+        if (!m) {
+            if (str) tokens.push({ type: 'text', content: str })
+            break
+        }
 
         if (m.index > 0) {
             tokens.push({ type: 'text', content: str.substring(0, m.index) })
+        }
+
+        if (m[3]) {
+            tokens.push({ type: 'mixin', path: m[3] })
+            str = str.substring(m.index + m[0].length)
+            continue
         }
 
         const name = m[1]
@@ -22,7 +29,7 @@ const tokenize = str => {
         str = str.substring(m.index + m[0].length)
 
         const p1 = str.indexOf('\n\n')
-        const p2 = str.search(def_pattern)
+        const p2 = str.search(pattern)
         const p = p1 >= 0 && p2 >= 0 ? Math.min(p1+1, p2) :
                   p1 < 0 && p2 < 0 ? str.length : Math.max(p1+1, p2)
 
@@ -31,6 +38,24 @@ const tokenize = str => {
 
         tokens.push({ type, name, content })
     }
+
+    for (let i = 0; i < tokens.length; i++) if (tokens[i].type == 'mixin') {
+        const fs = require('fs')
+        const path = tokens[i].path
+        const stat = fs.statSync(path)
+        if (stat.isDirectory()) { // include before and after
+            const before = tokenize(fs.readFileSync(path + '/before.ymd', 'utf8'))
+            const after = tokenize(fs.readFileSync(path + '/after.ymd', 'utf8'))
+            tokens.splice(i, 1, ...before)
+            tokens.push(...after)
+        } else {
+            const mixins = tokenize(fs.readFileSync(path, 'utf8'))
+            tokens.splice(i, 1, ...mixins)
+        }
+        i -= 1 // revisit i since we replaced it
+    }
+
+    return tokens
 }
 
 const interpret = (str, env, defs) => {
@@ -83,4 +108,5 @@ TODO:
 1. support first-class markdown-like nestable lists
 2. cleanup the spaces, carefully define when to trim
 3. require a newline before indent to open paragraph?
+4. provide relative path resolution inside mixins
 */
