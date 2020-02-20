@@ -78,7 +78,8 @@ const interpret = (str, env, defs) => {
         case 'fn':
             env.remaining = str.substring(p2 + name.length + 2)
             env.interpret = str => interpret(str, env, defs) // We gaved full defs that on the call site (dynamic scoping) since it is likely to be used on text near the callsite (not text on the fn definition)
-            return str.substring(0, p2) + vm.runInContext('{' + def.content + '}', env)
+            const result = vm.runInContext('{' + def.content + '}', env)
+            return str.substring(0, p2) + result + env.interpret(env.remaining)
         case 'ref':
             return str.substring(0, p2) +
                 interpret(def.content, env, defs.slice(i+1)) + // However for ref we use lexical scoping. Exclude self to prevent recusion

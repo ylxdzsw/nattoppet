@@ -4,11 +4,10 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@nattoppet/koa/koa.less)
+[require](@std/koa/koa.less)
 
 <section id="title">
 <h1>[title]</h1>
-</section>
 
 [init]
 [init]= this.sections = []

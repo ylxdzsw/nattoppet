@@ -21,13 +21,13 @@ const done = () => {
     !busy && queued && start(queued = false)
 }
 
-const start = () => {
+const start = (init=false) => {
     const child = cp.spawn(__dirname + '/ymd.js', [file])
     let buffer = ''
     child.stdout.on('data', chunk => buffer += chunk)
     child.on('close', code => {
         if (code == 0) {
-            console.log("updated")
+            console.log(init ? "rendered" : "updated")
             content = buffer
         } else
             console.error("failed") // todo: print time
@@ -54,3 +54,5 @@ const browser = process.env.BROWSER || ({ darwin: 'open', win32: 'start', win64:
 browser.includes('chrom')
     ? cp.exec(`${browser} --app=http://127.0.0.1:3939`)
     : cp.exec(`${browser} http://127.0.0.1:3939`)
+
+start(true)

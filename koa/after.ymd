@@ -1,3 +1,5 @@
+</section>
+
 <div id="nav">
 <a id="nav-icon">
 <svg viewBox="0 0 120 120" width="24">
@@ -12,8 +14,9 @@
 [list]= this.sections.map((x, i) => `<li><a href="#section-${i}">${x}</a></li>`).join('')
 
 [section]=
-const title = interpret(capture_line())
-const content = capture_until("[section]", true, true)
+const title = interpret(capture_until('\n'))
 const index = this.sections.length
 this.sections.push(title)
-;`<section><h2 id="section-${index}">${title}</h2>${interpret(content)}</section>`
+;`</section><section><h2 id="section-${index}">${title}</h2>`
+
+[mixin] @std/common.ymd

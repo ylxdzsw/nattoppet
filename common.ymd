@@ -21,8 +21,7 @@ const {opts, args: [file, alt]} = std_call()
 const classes = opts.join(' ')
 const mimesuf = extname(file) == 'svg' ? 'svg+xml' : extname(file)
 const content = `data:image/${mimesuf};base64,` + read(file, 'base64')
-const alttext = alt ? `alt="${alt}"` : ''
-const htmltag = `<img class="${classes}" src="${content}" alt="${alttext}"/>`
+const htmltag = `<img class="${classes}" src="${content}" alt="${alt || ''}"/>`
 opts.includes('center') ? `<div style="text-align:center">${htmltag}</div>` : htmltag
 
 [h2]= `<h2>${interpret(capture_until('\n'))}</h2>`
