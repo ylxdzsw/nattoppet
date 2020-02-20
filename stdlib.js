@@ -5,73 +5,45 @@
 const fs = require('fs')
 const path = require('path')
 
-const compiler = require('./compiler')
-const stdlib = require('./stdlib')
 const coffee = require('coffeescript')
 const marked = require('marked')
 const katex = require("katex")
 const less = require('less')
 
-function move_match(state, reg) {
-    reg.lastIndex = state.i
-    const token = reg.exec(state.str)
-    state.i += token[0].length
-    return token
-}
-
-const helpers = {
-    capture_block() {
-        const i = next_match(this.state.str, /^\n/gm, this.state.i).index
-        const content = this.state.str.substring(this.state.i, i)
-        this.state.i = i
-        return content
-    },
-
-    capture_until(delimiter, keep=false, eof=false) {
-        let i = this.state.str.indexOf(delimiter, this.state.i)
-        if (i == -1)
-            if (eof)
-                i = this.state.str.length
-            else
-                throw new RangeError("string ends without seeing delimiter " + delimiter)
-        const content = this.state.str.substring(this.state.i, i)
-        this.state.i = i + (keep ? 0 : delimiter.length)
-        return content
-    },
-
-    capture_line() {
-        return this.capture_until('\n', false, true)
-    },
-
-    peek() {
-        return this.state.str[this.state.i]
-    },
-
-    skip(n=1) {
-        this.state.i += n
-    }
-}
-
 exports = {
-    std_dir: __dirname,
+    stdlib_dir: __dirname,
 
-    parse(hascontent = false) {
+    capture_until(delimiter) {
+        const p = this.remaining.indexOf(delimiter)
+        if (p < 0) {
+            const result = this.remaining
+            this.remaining = ""
+            return result
+        }
+        const result = this.remaining.substring(0, p)
+        this.remaining = this.remaining.substring(p + delimiter.length)
+        return result
+    },
+
+    std_call(hascontent = false) {
         const opts = [], args = []
         const parse_option = () => {
-            const token = move_match(this.state, /\.([\w\-]+)/g)
-            opts.push(token[1])
+            const m = this.remaining.match(/^\.([\w\-]+)/)
+            this.remaining = this.remaining.substring(m[0].length)
+            opts.push(m[1])
         }
         const parse_argument = () => {
-            const token = move_match(this.state, /\((.*?)\)|{(.*?)}/g)
-            args.push(token[1] || token[2])
+            const m = this.remaining.match(/^\((.*?)\)|{(.*?)}/)
+            this.remaining = this.remaining.substring(m[0].length)
+            args.push(m[1] || m[2])
         }
         const parse_block = () => {
-            const token = move_match(this.state, />+/g)
-            return this.capture_until('<'.repeat(token[0].length))
+            const m = this.remaining.match(/^>+/)
+            return this.capture_until('<'.repeat(m[0].length))
         }
 
         while (true) {
-            switch (this.peek()) {
+            switch (this.remaining[0]) {
                 case '.':
                     parse_option()
                     break
@@ -83,20 +55,20 @@ exports = {
                     return { opts, args, block: parse_block() }
                 case ' ':
                     if (hascontent)
-                        return { opts, args, block: this.capture_line() }
+                        return { opts, args, block: this.capture_until('\n') }
                 default:
                     return { opts, args }
             }
         }
     },
 
-    read(file, type='utf8') {
+    read(file, encoding='utf8') {
         if (file.startsWith('@std')) {
-            file = path.join(this.std_dir, file.substring(4))
+            file = path.join(this.stdlib_dir, file.substring(4))
         } else if (!path.isAbsolute(file)) {
             file = path.join(this.base_dir, file)
         }
-        return fs.readFileSync(file, type)
+        return fs.readFileSync(file, encoding)
     },
 
     extname(file) {
@@ -121,7 +93,7 @@ exports = {
         return marked(str)
     },
 
-    render_katex(str, displayMode = false) {
+    render_katex(str, displayMode=false) {
         return katex.renderToString(str, { displayMode })
     }
 }
