@@ -1,5 +1,5 @@
 {
-  "name": "ymd",
+  "name": "nattoppet",
   "description": "A tiny macro-based markup language for blogging",
   "version": "2.0.0",
   "dependencies": {
@@ -10,12 +10,12 @@
     "marked": "^0.8.0"
   },
   "bin": {
-    "ymd": "./ymd.js",
-    "ymd-dev": "./ymd-dev.js"
+    "nattoppet": "./nattoppet.js",
+    "nattoppet-dev": "./nattoppet-dev.js"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ylxdzsw/ymd.git"
+    "url": "https://github.com/ylxdzsw/nattoppet.git"
   }
 }

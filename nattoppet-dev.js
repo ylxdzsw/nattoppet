@@ -5,7 +5,7 @@
 const file = process.argv[2]
 
 if (process.argv.length != 3 || file == "--help")
-    return console.log("Usage: ymd-dev [file]")
+    return console.log("Usage: nattoppet-dev [file]")
 
 const fs = require('fs')
 const cp = require('child_process')
@@ -22,7 +22,7 @@ const done = () => {
 }
 
 const start = (init=false) => {
-    const child = cp.spawn(__dirname + '/ymd.js', [file])
+    const child = cp.spawn(__dirname + '/nattoppet.js', [file])
     let buffer = ''
     child.stdout.on('data', chunk => buffer += chunk)
     child.on('close', code => {
