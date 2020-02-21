@@ -1,7 +1,7 @@
 {
   "name": "nattoppet",
   "description": "A tiny macro-based markup language for blogging",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "dependencies": {
     "coffeescript": "^2.5.1",
     "html-minifier": "^4.0.0",

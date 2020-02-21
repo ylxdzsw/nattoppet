@@ -64,9 +64,11 @@ const interpret = (str, env, defs) => {
     if (p1 < 0 && p2 < 0) return str
 
     if (p2 < 0 || (p1 >= 0 && p1 < p2)) {
+        const head = str.substring(0, p1)
+        str = str.substring(p1+2)
         let p = str.indexOf('\n\n')
         if (p < 0) p = str.length
-        return str.substring(0, p1) + '<p>' + interpret(str.substring(p1+2, p), env, defs) + '</p>' + interpret(str.substring(p+1), env, defs)
+        return head + '<p>' + interpret(str.substring(0, p), env, defs) + '</p>' + interpret(str.substring(p+1), env, defs)
     }
 
     const name = str.match(/\[(.+?)\]/)[1]
