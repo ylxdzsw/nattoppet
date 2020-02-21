@@ -1,12 +1,12 @@
-@mixin anim($prop, $basetime: 200ms) {
-    transition: $prop 2 * $basetime;
+.anim(@prop, @basetime: 200ms) {
+    transition: @prop 2 * @basetime;
 
     &.fast {
-        transition: $prop $basetime;
+        transition: @prop @basetime;
     }
 
     &.slow {
-        transition: $prop 3 * $basetime;
+        transition: @prop 3 * @basetime;
     }
 }
 
@@ -50,7 +50,7 @@ code {
     font-size: .9rem;
 }
 
-h1,h2,h3 {
+h2,h3 {
     color: rgb(66, 184, 166) // rgb(30, 184, 212)
 }
 
@@ -106,7 +106,7 @@ footer {
     color: #888;
 }
 
-.banner {
+.banner > h2 {
     position: absolute;
     left: 10vw;
     top: 45%;
@@ -162,35 +162,37 @@ a {
     }
 }
 
-@for $i from 1 through 12 {
-    $percentage: $i / 12;
-
-    .col-#{$i} {
+.gen-col(@i) when (@i > 0) {
+    .col-@{i} {
         float: left;
-        width: $percentage * 100%;
+        width: (@i * 100% / 12);
     }
+    .gen-col(@i - 1)
 }
+.gen-col(12);
 
-@each $name, $color in (plum,       #ae81ff),
-                       (chartreuse, #a6e22e),
-                       (cyan,       #66d9ef),
-                       (tomato,     #f13c1a),
-                       (moccasin,   #ffe4b5) {
-    .#{$name} {
-        color: $color;
+.gen-color(@name, @color) {
+    .@{name} {
+        color: @color
     }
 
-    .fx-#{$name} {
-        @include anim(color);
+    .fx-@{name} {
+        .anim(color);
 
         &.active {
-           color: $color !important;
+           color: @color !important;
         }
     }
 }
 
+.gen-color(plum,       #ae81ff);
+.gen-color(chartreuse, #a6e22e);
+.gen-color(cyan,       #66d9ef);
+.gen-color(tomato,     #f13c1a);
+.gen-color(moccasin,   #ffe4b5);
+
 .slide {
-    @include anim(transform, 200ms);
+    .anim(transform, 200ms);
     transform: translateX(-100vw);
 
     &.active {
@@ -199,7 +201,7 @@ a {
 }
 
 .fade {
-    @include anim(opacity);
+    .anim(opacity);
     opacity: 0;
 
     &.active {
@@ -208,8 +210,8 @@ a {
 }
 
 .rise {
-    @include anim(opacity);
-    @include anim(transform);
+    .anim(opacity);
+    .anim(transform);
     opacity: 0;
     transform: translateY(10vh);
 

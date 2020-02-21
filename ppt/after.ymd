@@ -1,14 +1,21 @@
+[eval] this.inited ? "</section>" : ''
+
 [section]=
-const classes = peek() == '.' ? capture_until(' ').replace('.', ' ') : ''
-const title = capture_line()
-const content = capture_until("[section]", true, true)
-content.trim() ? `<section class="scen${classes}"><h2>${interpret(title)}</h2>${interpret(content)}</section>`
-               : `<section class="scen${classes}"><h1 class="banner">${interpret(title)}</h1></section>`
+const classes = remaining[0] == '.' ? capture_until(' ').replace('.', ' ') : ''
+const title = capture_until('\n')
+let close = "</section>"
+if (!this.inited) {
+    this.inited = true
+    close = ''
+}
+close + `<section class="scen${classes}"><h2>${interpret(title)}</h2>`
 
 [foot]=
-const content = capture_line()
+const content = capture_until('\n')
 ;`<footer>${interpret(content)}</footer>`
 
 [span]=
-const {args:[length]} = nattoppet_parse()
+const {args:[length]} = std_call()
 ;`<div style="height: ${length}; min-width: 1px"></div>`
+
+[mixin] @std/common.ymd
