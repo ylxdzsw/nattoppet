@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@nattoppet/tml/tml.less)
-[require](@nattoppet/tml/tml.coffee)
+[require](@std/tml/tml.less)
+[require](@std/tml/tml.coffee)
 
-[init]
-[init]= this.index = 0; ''
+[eval*] this.index = 0

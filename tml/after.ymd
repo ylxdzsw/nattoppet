@@ -1,16 +1,12 @@
-[article] __end__
+[eval] this.index > 0 ? "</article>" : ''
+
+<div class="end-symbol">* * * * *</div>
 
 [article]=
-const id = 'x' + this.index++
-const title = capture_line()
-if (title.trim() == "__end__")
-    `<div class="end-symbol">* * * * *</div>`
-else {
-    const header = title.trim() ? `<h2><a id="${id}" href="#${id}">${interpret(title)}</a></h2>` : ''
-    const content = capture_until("[article]", true, true)
-    ;`<article>${header}${interpret(content)}</article>`
-}
+const id = 'article' + this.index++
+const title = capture_until('\n')
+const header = title.trim() ? `<h2><a id="${id}" href="#${id}">${interpret(title)}</a></h2>` : ''
+const close = this.index > 1 ? "</article>" : ''
+close + "<article>" + header
 
-[h3]=
-const id = 'x' + this.index++
-`<h3><a id="${id}" href="#${id}">${interpret(capture_line())}</a></h3>`
+[mixin] @std/common.ymd
