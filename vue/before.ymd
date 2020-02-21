@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@nattoppet/vue/vue.scss)
+[require](@std/vue/vue.less)
 
-[init]
-[init]= this.index = 0; ''
+[eval*] this.index = 0

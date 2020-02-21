@@ -13,6 +13,10 @@ const less = require('less')
 module.exports = {
     stdlib_dir: __dirname,
 
+    skip(n) {
+        this.remaining = this.remaining.substring(n)
+    },
+
     capture_until(delimiter) {
         const p = this.remaining.indexOf(delimiter)
         if (p < 0) {
@@ -29,16 +33,17 @@ module.exports = {
         const opts = [], args = []
         const parse_option = () => {
             const m = this.remaining.match(/^\.([\w\-]+)/)
-            this.remaining = this.remaining.substring(m[0].length)
+            this.skip(m[0].length)
             opts.push(m[1])
         }
         const parse_argument = () => {
             const m = this.remaining.match(/^\((.*?)\)|{(.*?)}/)
-            this.remaining = this.remaining.substring(m[0].length)
+            this.skip(m[0].length)
             args.push(m[1] || m[2])
         }
         const parse_block = () => {
             const m = this.remaining.match(/^>+/)
+            this.skip(m[0].length)
             return this.capture_until('<'.repeat(m[0].length))
         }
 

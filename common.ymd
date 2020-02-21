@@ -29,8 +29,8 @@ opts.includes('center') ? `<div style="text-align:center">${htmltag}</div>` : ht
 [h4]= `<h4>${interpret(capture_until('\n'))}</h4>`
 
 [quote]=
-const {block} = std_call(true)
-;`<blockquote>${interpret(block)}</blockquote>`
+const {opts, block} = std_call(true)
+;`<blockquote class="${opts.join(' ')}">${interpret(block)}</blockquote>`
 
 [#]= std_call(true), ''
 
@@ -64,3 +64,11 @@ render_katex(tex, false)
 [$$]=
 const {block} = std_call(true)
 render_katex(block, true)
+
+[eval]=
+const {block} = std_call(true)
+eval(block)
+
+[eval*]=
+const {block} = std_call(true)
+eval(block); ''
