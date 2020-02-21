@@ -1,5 +1,5 @@
 html {
-    font-family: sans-serif;
+    font-family: serif;
     font-size: 18px;
     line-height: 1.5;
     width: 100%;
@@ -8,13 +8,10 @@ html {
     background: white;
     color: #33333d;
 
-    -webkit-user-select: none;
-
-    hyphens: auto;
-
     @media (max-width: 625px) {
-        font-size: 14px;
+        font-size: 16px;
         text-align: justify;
+        hyphens: auto;
     }
 }
 
@@ -35,7 +32,7 @@ section {
     padding: 150px 10vw;
 
     @media (max-width: 625px) {
-        padding: 25px 15px;
+        padding: 25px 1.25rem;
     }
 
     &:nth-child(2n-1) {
@@ -53,18 +50,17 @@ pre {
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     padding: 25px;
-    font-size: .9rem;
+    font-size: .8rem;
     text-align: left;
     overflow-x: auto;
 }
 
 code {
     font-family: monospace;
-    font-size: .9rem;
 }
 
 h2 {
-    margin-top: 50px;
+    margin-top: 40px;
     font-size: 2rem;
 }
 
@@ -86,10 +82,6 @@ p {
     text-indent: 2rem;
 }
 
-blockquote p {
-    text-indent: 0;
-}
-
 #title {
     padding: 0;
     height: 100%;
@@ -107,7 +99,6 @@ blockquote p {
         transform: translateY(-50%);
         margin: 0;
 
-        font-family: cursive;
         font-size: 6rem;
         font-weight: normal;
 
