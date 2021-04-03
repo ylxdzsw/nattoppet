@@ -1,21 +1,19 @@
 {
   "name": "nattoppet",
   "description": "A tiny macro-based markup language for blogging",
-  "version": "2.0.2",
+  "author": "Shiwei Zhang <ylxdzsw@gmail.com>",
+  "version": "2.0.3",
   "dependencies": {
     "coffeescript": "^2.5.1",
     "html-minifier": "^4.0.0",
-    "katex": "^0.10.2",
-    "less": "^3.11.1",
-    "marked": "^0.8.0"
+    "katex": "^0.13.0",
+    "less": "^4.1.1",
+    "marked": "^2.0.1"
   },
   "bin": {
     "nattoppet": "./nattoppet.js",
     "nattoppet-dev": "./nattoppet-dev.js"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ylxdzsw/nattoppet.git"
-  }
+  "repository": "https://github.com/ylxdzsw/nattoppet.git"
 }

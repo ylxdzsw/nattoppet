@@ -88,8 +88,8 @@ module.exports = {
         return path.basename(file)
     },
 
-    render_coffee(str) {
-        return coffee.compile(str)
+    render_coffee(str, options) {
+        return coffee.compile(str, options)
     },
 
     render_less(str) {

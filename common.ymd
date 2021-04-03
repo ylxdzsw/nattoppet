@@ -7,7 +7,7 @@ switch (extname(file)) {
     case 'css':
         `<style>${content}</style>`; break
     case 'coffee':
-        `<script>${render_coffee(content)}</script>`; break
+        `<script>${render_coffee(content, { bare: true })}</script>`; break
     case 'js':
         `<script>${content}</script>`; break
     case 'md':
