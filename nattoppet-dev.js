@@ -22,7 +22,7 @@ const done = () => {
 }
 
 const start = (init=false) => {
-    const child = cp.spawn(__dirname + '/nattoppet.js', [file])
+    const child = cp.spawn(__dirname + '/nattoppet.js', [file, '--dev'])
     let buffer = ''
     child.stdout.on('data', chunk => buffer += chunk)
     child.on('close', code => {

@@ -12,7 +12,8 @@ const file = process.argv[2] || 0
 const dir = file ? path.dirname(path.resolve(file)) : process.cwd()
 const str = fs.readFileSync(file, 'utf8')
 const env = { ...stdlib, base_dir: dir }
-const out = minifier.minify(compiler.compile(str, env), {
+const raw = compiler.compile(str, env)
+const out = process.argv.includes('--dev', 1) ? raw : minifier.minify(raw, {
     collapseWhitespace: true,
     removeAttributeQuotes: true,
     removeComments: true,
