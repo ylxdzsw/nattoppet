@@ -99,7 +99,7 @@ module.exports = {
     },
 
     render_markdown(str) {
-        return marked(str)
+        return marked.parse(str)
     },
 
     render_katex(str, displayMode=false) {
