@@ -119,4 +119,6 @@ TODO:
 2. cleanup the spaces, carefully define when to trim
 3. require a newline before indent to open paragraph?
 4. provide relative path resolution inside mixins
+
+5. rewrite with vm when it (or anything equivalent) get added to deno
 */
