@@ -1,23 +1,19 @@
-#!/usr/bin/env node
+import * as path from "https://deno.land/std@0.126.0/path/mod.ts"
+import * as base64 from "https://deno.land/std@0.126.0/encoding/base64.ts"
 
-'use strict'
+import { marked } from "https://esm.sh/marked@^4.0.10"
+import coffee from "https://esm.sh/coffeescript@^2.6.1"
+import katex from "https://esm.sh/katex@^0.15.0?no-check"
+import less from "https://deno.land/x/aleph@v0.2.28/vendor/less/less.js"
 
-const fs = require('fs')
-const path = require('path')
+export default {
+    stdlib_dir: path.dirname(path.fromFileUrl(import.meta.url)),
 
-const coffee = require('coffeescript')
-const marked = require('marked')
-const katex = require("katex")
-const less = require('less')
-
-module.exports = {
-    stdlib_dir: __dirname,
-
-    skip(n) {
+    skip(n: number) {
         this.remaining = this.remaining.substring(n)
     },
 
-    capture_until(delimiter) {
+    capture_until(delimiter: string) {
         const p = this.remaining.indexOf(delimiter)
         if (p < 0) {
             const result = this.remaining
@@ -30,7 +26,7 @@ module.exports = {
     },
 
     std_call(hascontent = false) {
-        const opts = [], args = []
+        const opts: string[] = [], args: string[] = []
         const parse_option = () => {
             const m = this.remaining.match(/^\.([\w\-]+)/)
             this.skip(m[0].length)
@@ -67,7 +63,7 @@ module.exports = {
         }
     },
 
-    rpath(file) {
+    rpath(file: string) {
         if (file.startsWith('@std')) {
             return path.join(this.stdlib_dir, file.substring(4))
         } else if (!path.isAbsolute(file)) {
@@ -76,33 +72,41 @@ module.exports = {
         return file
     },
 
-    read(file, encoding='utf8') {
-        return fs.readFileSync(this.rpath(file), encoding)
+    read(file: string, encoding = "utf-8") {
+        switch (encoding) {
+            case "utf8":
+            case "utf-8":
+                return Deno.readTextFileSync(this.rpath(file))
+            case "base64":
+                return base64.encode(Deno.readFileSync(this.rpath(file)))
+            default:
+                throw "unknown encoding: " + encoding
+        }
     },
 
-    extname(file) {
+    extname(file: string) {
         return path.extname(file).slice(1)
     },
 
-    basename(file) {
+    basename(file: string) {
         return path.basename(file)
     },
 
-    render_coffee(str, options) {
+    render_coffee(str: string, options: any) {
         return coffee.compile(str, options)
     },
 
-    render_less(str) {
-        let x; less.render(str, {}, (err, out) => !err && (x = out))
+    render_less(str: string) {
+        let x: any; less.render(str, {}, (err: any, out: any) => !err && (x = out))
         if (!x) throw "less failed to compile synchronously"
         return x.css
     },
 
-    render_markdown(str) {
+    render_markdown(str: string) {
         return marked.parse(str)
     },
 
-    render_katex(str, displayMode=false) {
+    render_katex(str: string, displayMode = false) {
         return katex.renderToString(str, { displayMode })
     }
-}
+} as any

@@ -1,20 +1,16 @@
-'use strict'
-
-const vm = require("vm")
-
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
-const tokenize = (str, rpath=x=>x) => {
-    const tokens = []
+const tokenize = (str: string, rpath = (x: any) => x) => {
+    const tokens: any[] = []
 
     while (true) {
         const m = str.match(pattern)
-        if (!m) {
+        if (!m || m.index == null) {
             if (str) tokens.push({ type: 'text', content: str })
             break
         }
 
-        if (m.index > 0) {
+        if (m.index && m.index > 0) {
             tokens.push({ type: 'text', content: str.substring(0, m.index) })
         }
 
@@ -40,16 +36,15 @@ const tokenize = (str, rpath=x=>x) => {
     }
 
     for (let i = 0; i < tokens.length; i++) if (tokens[i].type == 'mixin') {
-        const fs = require('fs')
         const path = rpath(tokens[i].path)
-        const stat = fs.statSync(path)
-        if (stat.isDirectory()) { // include before and after
-            const before = tokenize(fs.readFileSync(path + '/before.ymd', 'utf8'), rpath)
-            const after = tokenize(fs.readFileSync(path + '/after.ymd', 'utf8'), rpath)
+        const stat = Deno.statSync(path)
+        if (stat.isDirectory) { // include before and after
+            const before = tokenize(Deno.readTextFileSync(path + '/before.ymd'), rpath)
+            const after = tokenize(Deno.readTextFileSync(path + '/after.ymd'), rpath)
             tokens.splice(i, 1, ...before)
             tokens.push(...after)
         } else {
-            const mixins = tokenize(fs.readFileSync(path, 'utf8'), rpath)
+            const mixins = tokenize(Deno.readTextFileSync(path), rpath)
             tokens.splice(i, 1, ...mixins)
         }
         i -= 1 // revisit i since we replaced it
@@ -58,7 +53,7 @@ const tokenize = (str, rpath=x=>x) => {
     return tokens
 }
 
-const interpret = (str, env, defs) => {
+const _interpret = (str: string, env: any, defs: any[]): any => {
     const p1 = str.search(/^  /m)
     const p2 = str.search(/\[(.+?)\]/)
     if (p1 < 0 && p2 < 0) return str
@@ -68,10 +63,10 @@ const interpret = (str, env, defs) => {
         str = str.substring(p1+2)
         let p = str.indexOf('\n\n')
         if (p < 0) p = str.length
-        return head + '<p>' + interpret(str.substring(0, p), env, defs) + '</p>' + interpret(str.substring(p+1), env, defs)
+        return head + '<p>' + _interpret(str.substring(0, p), env, defs) + '</p>' + _interpret(str.substring(p+1), env, defs)
     }
 
-    const name = str.match(/\[(.+?)\]/)[1]
+    const name = str.match(/\[(.+?)\]/)![1]
     const i = defs.findIndex(x => x.name == name)
     if (i < 0) throw `definition ${name} not found`
 
@@ -79,24 +74,31 @@ const interpret = (str, env, defs) => {
     switch (def.type) {
         case 'fn':
             env.remaining = str.substring(p2 + name.length + 2)
-            env.interpret = str => { // a "scoped" interpret function capable for interpreting substrings. We preserve the "remaining" property outside.
+            env.interpret = (str: string) => { // a "scoped" interpret function capable for interpreting substrings. We preserve the "remaining" property outside.
                 const remaining = env.remaining
-                const result = interpret(str, env, defs) // We gaved full defs available on the call site (dynamic scoping) as the text to be interpreted is part of the call site text.
+                const result = _interpret(str, env, defs) // We gaved full defs available on the call site (dynamic scoping) as the text to be interpreted is part of the call site text.
                 env.remaining = remaining
                 return result
             }
-            const result = vm.runInContext('{' + def.content + '}', env)
-            return str.substring(0, p2) + result + interpret(env.remaining, env, defs)
+            // const result = vm.runInContext('{' + def.content + '}', env)
+            for (const k in env) {
+                if (env.hasOwnProperty(k))
+                    // @ts-ignore
+                    globalThis[k] = env[k]
+            }
+            const result = (1, eval)('{' + def.content + '}')
+            return str.substring(0, p2) + result + _interpret(env.remaining, env, defs)
         case 'ref':
             return str.substring(0, p2) +
-                interpret(def.content, env, defs.slice(i+1)) + // However for ref we use lexical scoping. Exclude self to prevent recusion
-                interpret(str.substring(p2 + name.length + 2), env, defs)
+                _interpret(def.content, env, defs.slice(i+1)) + // However for ref we use lexical scoping. Exclude self to prevent recusion
+                _interpret(str.substring(p2 + name.length + 2), env, defs)
         default: throw 'unknown defs type'
     }
 }
 
-exports.compile = (str, locals={}) => {
-    const env = vm.createContext(locals)
+export const compile = (str: string, locals: any = {}) => {
+    // const env = vm.createContext(locals)
+    const env: any = locals
     for (const k in env) if (typeof(env[k]) == 'function')
         env[k] = env[k].bind(env)
 
@@ -106,7 +108,7 @@ exports.compile = (str, locals={}) => {
         const token = tokens.shift()
         if (!token) return output
         if (token.type == 'text') {
-            output += interpret(token.content, env, tokens)
+            output += _interpret(token.content, env, tokens)
         }
     }
 }
