@@ -67,14 +67,18 @@ const tokenize = async (str: string) => {
                 tokens[i] = { type: "raw", content }
                 break
             }
+            case ".css": {
+                const content = `<style>${await fetch_text_file(path)}</style>`
+                tokens[i] = { type: "raw", content }
+                break
+            }
             case ".coffee": {
                 const content = `<script>${stdlib.render_coffee(await fetch_text_file(path), { bare: true })}</script>`
                 tokens[i] = { type: "raw", content }
                 break
             }
-            default: {
-                tokens[i] = { type: "code", content: await fetch_text_file(path) }
-            }
+            default:
+                throw "unknown mixin type"
         }
 
         i -= 1 // revisit i since we replaced it
