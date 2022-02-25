@@ -1,14 +1,10 @@
-import * as path from "https://deno.land/std@0.126.0/path/mod.ts"
-
-const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
-
-const init = () => {
+const init = async () => {
     Deno.mkdirSync('native')
     Deno.mkdirSync('native/src')
     Deno.mkdirSync('native/target')
-    Deno.copyFileSync(path.join(__dirname, 'native', 'src', 'main.rs'), 'native/src/main.rs')
-    Deno.copyFileSync(path.join(__dirname, 'native', 'build.rs'), 'native/build.rs')
-    Deno.copyFileSync(path.join(__dirname, 'native', 'Cargo.toml'), 'native/Cargo.toml')
+    Deno.writeTextFileSync("native/src/main.rs", await (await fetch(new URL("native/src/main.rs", import.meta.url))).text())
+    Deno.writeTextFileSync("native/build.rs", await (await fetch(new URL("native/build.rs", import.meta.url))).text())
+    Deno.writeTextFileSync("native/Cargo.toml", await (await fetch(new URL("native/Cargo.toml", import.meta.url))).text())
 }
 
 const bundle = async () => {
@@ -18,7 +14,7 @@ const bundle = async () => {
             "run",
             "-A",
             "--unstable",
-            path.join(__dirname, '/nattoppet.ts'),
+            new URL("nattoppet.ts", import.meta.url).href,
             Deno.args[1]
         ],
         stdout: "piped",

@@ -1,7 +1,3 @@
-import * as path from "https://deno.land/std@0.126.0/path/mod.ts"
-
-const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
-
 const file = Deno.args[0]
 
 if (Deno.args.length != 1 || file == "--help") {
@@ -26,7 +22,7 @@ const start = async (init=false) => {
             "run",
             "-A",
             "--unstable",
-            path.join(__dirname, '/nattoppet.ts'),
+            new URL("nattoppet.ts", import.meta.url).href,
             file,
             "--dev"
         ],
