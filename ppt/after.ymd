@@ -18,4 +18,4 @@ const content = capture_until('\n')
 const {args:[length]} = std_call()
 ;`<div style="height: ${length}; min-width: 1px"></div>`
 
-[mixin] @std/common.ymd
+[mixin] common.ymd

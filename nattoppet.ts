@@ -9,11 +9,11 @@ const compiled = await (async () => {
     if (file) {
         const dir = path.dirname(path.resolve(file))
         const code = Deno.readTextFileSync(file)
-        return compiler.compile(code, { ...stdlib, base_dir: dir })
+        return await compiler.compile(code, { ...stdlib, base_dir: dir })
     } else {
         const dir = Deno.cwd()
         const code = await new Response(Deno.stdin.readable).text()
-        return compiler.compile(code, { ...stdlib, base_dir: dir })
+        return await compiler.compile(code, { ...stdlib, base_dir: dir })
     }
 })()
 

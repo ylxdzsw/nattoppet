@@ -19,4 +19,4 @@ const index = this.sections.length
 this.sections.push(title)
 ;`</section><section><h2 id="sec${index}">${title}</h2>`
 
-[mixin] @std/common.ymd
+[mixin] common.ymd

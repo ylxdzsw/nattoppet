@@ -4,6 +4,6 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@std/vue/vue.less)
+[mixin] vue/vue.less
 
 [eval*] this.index = 0

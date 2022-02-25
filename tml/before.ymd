@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@std/tml/tml.less)
-[require](@std/tml/tml.coffee)
+[mixin] tml/tml.less
+[mixin] tml/tml.coffee
 
 [eval*] this.index = 0

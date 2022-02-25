@@ -1,17 +1,28 @@
+import { extname } from "https://deno.land/std@0.126.0/path/mod.ts"
+import stdlib from "./stdlib.ts"
+
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
-const tokenize = (str: string, rpath = (x: any) => x) => {
+const fetch_text_file = async (path: string) => {
+    const res = await fetch(new URL(path, import.meta.url))
+    return await res.text()
+}
+
+// tokenize also process mixins
+// mixins are special direvatives
+// they always relative to the root directory of nattoppet
+const tokenize = async (str: string) => {
     const tokens: any[] = []
 
     while (true) {
         const m = str.match(pattern)
         if (!m || m.index == null) {
-            if (str) tokens.push({ type: 'text', content: str })
+            if (str) tokens.push({ type: "code", content: str })
             break
         }
 
         if (m.index && m.index > 0) {
-            tokens.push({ type: 'text', content: str.substring(0, m.index) })
+            tokens.push({ type: "code", content: str.substring(0, m.index) })
         }
 
         if (m[3]) {
@@ -36,17 +47,36 @@ const tokenize = (str: string, rpath = (x: any) => x) => {
     }
 
     for (let i = 0; i < tokens.length; i++) if (tokens[i].type == 'mixin') {
-        const path = rpath(tokens[i].path)
-        const stat = Deno.statSync(path)
-        if (stat.isDirectory) { // include before and after
-            const before = tokenize(Deno.readTextFileSync(path + '/before.ymd'), rpath)
-            const after = tokenize(Deno.readTextFileSync(path + '/after.ymd'), rpath)
-            tokens.splice(i, 1, ...before)
-            tokens.push(...after)
-        } else {
-            const mixins = tokenize(Deno.readTextFileSync(path), rpath)
-            tokens.splice(i, 1, ...mixins)
+        const path = tokens[i].path
+
+        switch (extname(path)) {
+            case "": {
+                const before = await tokenize(await fetch_text_file(path + "/before.ymd"))
+                const after = await tokenize(await fetch_text_file(path + "/after.ymd"))
+                tokens.splice(i, 1, ...before)
+                tokens.push(...after)
+                break
+            }
+            case ".ymd": {
+                const mixins = await tokenize(await fetch_text_file(path))
+                tokens.splice(i, 1, ...mixins)
+                break
+            }
+            case ".less": {
+                const content = `<style>${stdlib.render_less(await fetch_text_file(path))}</style>`
+                tokens[i] = { type: "raw", content }
+                break
+            }
+            case ".coffee": {
+                const content = `<script>${stdlib.render_coffee(await fetch_text_file(path), { bare: true })}</script>`
+                tokens[i] = { type: "raw", content }
+                break
+            }
+            default: {
+                tokens[i] = { type: "code", content: await fetch_text_file(path) }
+            }
         }
+
         i -= 1 // revisit i since we replaced it
     }
 
@@ -96,19 +126,24 @@ const _interpret = (str: string, env: any, defs: any[]): any => {
     }
 }
 
-export const compile = (str: string, locals: any = {}) => {
+export const compile = async (str: string, locals: any = {}) => {
     // const env = vm.createContext(locals)
     const env: any = locals
     for (const k in env) if (typeof(env[k]) == 'function')
         env[k] = env[k].bind(env)
 
-    let tokens = tokenize(str, env.rpath)
+    let tokens = await tokenize(str)
     let output = ''
     while (true) {
         const token = tokens.shift()
         if (!token) return output
-        if (token.type == 'text') {
-            output += _interpret(token.content, env, tokens)
+        switch (token.type) {
+            case "code":
+                output += _interpret(token.content, env, tokens)
+                break
+            case "raw":
+                output += token.content
+                break
         }
     }
 }
@@ -118,7 +153,6 @@ TODO:
 1. support first-class markdown-like nestable lists
 2. cleanup the spaces, carefully define when to trim
 3. require a newline before indent to open paragraph?
-4. provide relative path resolution inside mixins
 
 5. rewrite with vm when it (or anything equivalent) get added to deno
 */

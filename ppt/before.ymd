@@ -4,5 +4,5 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[require](@std/ppt/ppt.less)
-[require](@std/ppt/ppt.coffee)
+[mixin] ppt/ppt.less
+[mixin] ppt/ppt.coffee

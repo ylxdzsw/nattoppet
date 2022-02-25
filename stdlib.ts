@@ -7,8 +7,6 @@ import katex from "https://esm.sh/katex@^0.15.0?no-check"
 import less from "https://deno.land/x/aleph@v0.2.28/vendor/less/less.js"
 
 export default {
-    stdlib_dir: path.dirname(path.fromFileUrl(import.meta.url)),
-
     skip(n: number) {
         this.remaining = this.remaining.substring(n)
     },
@@ -64,11 +62,8 @@ export default {
     },
 
     rpath(file: string) {
-        if (file.startsWith('@std')) {
-            return path.join(this.stdlib_dir, file.substring(4))
-        } else if (!path.isAbsolute(file)) {
+        if (!path.isAbsolute(file))
             return path.join(this.base_dir, file)
-        }
         return file
     },
 

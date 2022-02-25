@@ -9,4 +9,4 @@ const header = title.trim() ? `<h2><a id="${id}" href="#${id}">${interpret(title
 const close = this.index > 1 ? "</article>" : ''
 close + "<article>" + header
 
-[mixin] @std/common.ymd
+[mixin] common.ymd
