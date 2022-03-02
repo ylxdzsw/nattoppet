@@ -22,6 +22,7 @@ const start = async (init=false) => {
             "run",
             "-A",
             "--unstable",
+            "--no-check",
             new URL("nattoppet.ts", import.meta.url).href,
             file,
             "--dev"
