@@ -1,0 +1,20 @@
+<button>Run</button>
+<pre class="hidden"></pre>
+
+[h3]=
+const {block: content} = std_call(true)
+;`<h3>${content}</h3>`
+
+[text]=
+const {opts: [name], args: [attr=""], block: desc} = std_call(true)
+;`<label>${desc.trim()}<input name="${name}" ${attr}></input></label>`
+
+[number]=
+const {opts: [name], args: [attr=""], block: desc} = std_call(true)
+;`<label>${desc.trim()}<input type="number" name="${name}" ${attr}></input></label>`
+
+[checkbox]=
+const {opts: [name], args: [attr=""], block: desc} = std_call(true)
+;`<label><input type="checkbox" name="${name}" ${attr}></input>${desc.trim()}</label>`
+
+[mixin] common.ymd

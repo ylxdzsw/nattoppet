@@ -72,6 +72,11 @@ const tokenize = async (str: string) => {
                 tokens[i] = { type: "raw", content }
                 break
             }
+            case ".js": {
+                const content = `<script>${await fetch_text_file(path)}</script>`
+                tokens[i] = { type: "raw", content }
+                break
+            }
             case ".coffee": {
                 const content = `<script>${stdlib.render_coffee(await fetch_text_file(path), { bare: true })}</script>`
                 tokens[i] = { type: "raw", content }
