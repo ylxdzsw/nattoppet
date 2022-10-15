@@ -2,6 +2,7 @@ window.addEventListener('load', async () => {
     document.querySelector('button').addEventListener('click', async () => {
         document.querySelector('pre').classList.remove('hidden')
         document.querySelector('button').disabled = true
+        await new Promise(res => setTimeout(res, 0))
 
         const args = Object.create(null)
 
@@ -28,6 +29,7 @@ window.addEventListener('load', async () => {
             throw e
         } finally {
             document.querySelector('button').disabled = false
+            await new Promise(res => setTimeout(res, 0))
         }
     })
 })
