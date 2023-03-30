@@ -1,4 +1,4 @@
-import { extname } from "https://deno.land/std@0.126.0/path/mod.ts"
+import { extname } from "https://deno.land/std@0.181.0/path/mod.ts"
 import stdlib from "./stdlib.ts"
 
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m

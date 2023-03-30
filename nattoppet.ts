@@ -1,5 +1,5 @@
-import * as path from "https://deno.land/std@0.126.0/path/mod.ts"
-import minifier from "https://esm.sh/html-minifier-terser@^6.1.0"
+import * as path from "https://deno.land/std@0.181.0/path/mod.ts"
+import minifier from "npm:html-minifier-terser@^6.1.0"
 
 import stdlib from "./stdlib.ts"
 import * as compiler from "./compiler.ts"

@@ -1,10 +1,10 @@
-import * as path from "https://deno.land/std@0.126.0/path/mod.ts"
-import * as base64 from "https://deno.land/std@0.126.0/encoding/base64.ts"
+import * as path from "https://deno.land/std@0.181.0/path/mod.ts"
+import * as base64 from "https://deno.land/std@0.181.0/encoding/base64.ts"
 
-import { marked } from "https://esm.sh/marked@^4.0.10"
-import coffee from "https://esm.sh/coffeescript@^2.6.1"
-import katex from "https://esm.sh/katex@^0.16.2?no-check"
-import less from "https://deno.land/x/aleph@v0.2.28/vendor/less/less.js"
+import * as marked from "npm:marked@^4.0.10"
+import coffee from "https://cdn.skypack.dev/coffeescript@^2.6.1"
+import katex from "npm:katex@^0.16.2"
+import less from "npm:less@^4.1.3"
 
 export default {
     skip(n: number) {
