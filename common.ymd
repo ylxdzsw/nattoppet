@@ -1,15 +1,15 @@
 [require]=
-const {args: [file]} = std_call()
+const {opts: [id], args: [file]} = std_call()
 const content = read(file)
 switch (extname(file)) {
     case 'less':
-        `<style>${render_less(content)}</style>`; break
+        `<style ${id ? `id="${id}"` : ''}>${render_less(content)}</style>`; break
     case 'css':
-        `<style>${content}</style>`; break
+        `<style ${id ? `id="${id}"` : ''}>${content}</style>`; break
     case 'coffee':
-        `<script>${render_coffee(content, { bare: true })}</script>`; break
+        `<script ${id ? `id="${id}"` : ''}>${render_coffee(content, { bare: true })}</script>`; break
     case 'js':
-        `<script>${content}</script>`; break
+        `<script ${id ? `id="${id}"` : ''}>${content}</script>`; break
     case 'md':
         render_markdown(content); break
     default:

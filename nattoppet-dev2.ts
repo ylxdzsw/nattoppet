@@ -58,7 +58,7 @@ if (Deno.args.length < 1 || file == "--help") {
 
                 const content = status.code == 0 ? output : "failed"
 
-                respondWith(new Response(content, {
+                await respondWith(new Response(content, {
                     headers: {
                         "Content-Type": "text/html"
                     },
