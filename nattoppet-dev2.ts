@@ -15,10 +15,7 @@ if (Deno.args.length < 1 || file == "--help") {
                     try {
                         const file = await Deno.open(new URL(url).pathname.slice(1), { read: true })
                         await respondWith(new Response(file.readable, {
-                            status: 200,
-                            headers: {
-                                "Content-Type": "text/javascript"
-                            }
+                            status: 200
                         }))
                     } catch (e) {
                         console.error(e)

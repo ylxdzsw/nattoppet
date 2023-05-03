@@ -102,6 +102,6 @@ export default {
     },
 
     render_katex(str: string, displayMode = false) {
-        return katex.renderToString(str, { displayMode })
+        return katex.renderToString(str, { displayMode, output: 'html' })
     }
 } as any
