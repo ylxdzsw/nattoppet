@@ -25,7 +25,7 @@ window.addEventListener('load', async () => {
             if (result)
                 document.querySelector('pre').textContent = result
         } catch (e) {
-            document.querySelector('pre').textContent = "Error. Check the console."
+            document.querySelector('pre').textContent = "Error."
             throw e
         } finally {
             document.querySelector('button').disabled = false
