@@ -39,11 +39,9 @@ window.addEventListener('load', async () => {
         }
     })
 
-    document.querySelectorAll('input').forEach(e => {
-        e.addEventListener('input', () => {
-            const url_params = new URLSearchParams(gather_inputs())
-            history.replaceState(null, '', '#' + url_params.toString())
-        })
+    document.body.addEventListener('input', () => {
+        const url_params = new URLSearchParams(gather_inputs())
+        history.replaceState(null, '', '#' + url_params.toString())
     })
 
     if (location.hash.length > 1) {
