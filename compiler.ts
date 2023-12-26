@@ -3,19 +3,15 @@ import stdlib from "./stdlib.ts"
 
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
-const fetch_text_file = async (path: string, base_dir: string) => {
-    if (path.startsWith("./")) {
-        return await Deno.readTextFile(base_dir + path.slice(1))
-    } else {
-        const res = await fetch(new URL(path, import.meta.url))
-        return await res.text()
-    }
+const fetch_text_file = async (path: string) => {
+    const res = await fetch(new URL(path, import.meta.url))
+    return await res.text()
 }
 
 // tokenize also process mixins
 // mixins are special direvatives
 // by default, they are relative to the root directory of nattoppet, unless they are prefixed with "./"
-const tokenize = async (str: string, base_dir: string) => {
+const tokenize = async (str: string) => {
     const tokens: any[] = []
 
     while (true) {
@@ -55,34 +51,34 @@ const tokenize = async (str: string, base_dir: string) => {
 
         switch (extname(path)) {
             case "": {
-                const before = await tokenize(await fetch_text_file(path + "/before.ymd", base_dir), base_dir)
-                const after = await tokenize(await fetch_text_file(path + "/after.ymd", base_dir), base_dir)
+                const before = await tokenize(await fetch_text_file(path + "/before.ymd"))
+                const after = await tokenize(await fetch_text_file(path + "/after.ymd"))
                 tokens.splice(i, 1, ...before)
                 tokens.push(...after)
                 break
             }
             case ".ymd": {
-                const mixins = await tokenize(await fetch_text_file(path, base_dir), base_dir)
+                const mixins = await tokenize(await fetch_text_file(path))
                 tokens.splice(i, 1, ...mixins)
                 break
             }
             case ".less": {
-                const content = `<style>${stdlib.render_less(await fetch_text_file(path, base_dir))}</style>`
+                const content = `<style>${stdlib.render_less(await fetch_text_file(path))}</style>`
                 tokens[i] = { type: "raw", content }
                 break
             }
             case ".css": {
-                const content = `<style>${await fetch_text_file(path, base_dir)}</style>`
+                const content = `<style>${await fetch_text_file(path)}</style>`
                 tokens[i] = { type: "raw", content }
                 break
             }
             case ".js": {
-                const content = `<script>${await fetch_text_file(path, base_dir)}</script>`
+                const content = `<script>${await fetch_text_file(path)}</script>`
                 tokens[i] = { type: "raw", content }
                 break
             }
             case ".coffee": {
-                const content = `<script>${stdlib.render_coffee(await fetch_text_file(path, base_dir), { bare: true })}</script>`
+                const content = `<script>${stdlib.render_coffee(await fetch_text_file(path), { bare: true })}</script>`
                 tokens[i] = { type: "raw", content }
                 break
             }
@@ -145,7 +141,7 @@ export const compile = async (str: string, locals: any = {}) => {
     for (const k in env) if (typeof(env[k]) == 'function')
         env[k] = env[k].bind(env)
 
-    let tokens = await tokenize(str, locals.base_dir)
+    let tokens = await tokenize(str)
     let output = ''
     while (true) {
         const token = tokens.shift()
@@ -166,6 +162,5 @@ TODO:
 1. support first-class markdown-like nestable lists
 2. cleanup the spaces, carefully define when to trim
 3. require a newline before indent to open paragraph?
-
-5. rewrite with vm when it (or anything equivalent) get added to deno
+4. rewrite with vm when it (or anything equivalent) get added to deno
 */

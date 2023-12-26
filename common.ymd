@@ -13,12 +13,11 @@ switch (extname(file)) {
     case 'md':
         render_markdown(content); break
     case 'wasm':
-        const name = file.match(/.*\/(.*).wasm$/)[1]
-        ;`<script ${id ? `id="${id}"` : ''>
+        `<script ${id ? `id="${id}"` : ''}>
             const ready = (async () => {
                 const buffer = Uint8Array.from(atob("${read(file, 'base64')}"), c => c.charCodeAt(0))
                 const x = await WebAssembly.instantiate(buffer, {})
-                window.${name} = x.instance.exports
+                window.${file.match(/.*\/(.*).wasm$/)[1]} = x.instance.exports
             })()
             window.wasm_ready = window.wasm_ready ? Promise.all(window.wasm_ready, ready) : ready
         </script>`; break
