@@ -15,8 +15,11 @@ switch (extname(file)) {
     case 'wasm':
         `<script ${id ? `id="${id}"` : ''}>
             const ready = (async () => {
-                const buffer = Uint8Array.from(atob("${read(file, 'base64')}"), c => c.charCodeAt(0))
-                const x = await WebAssembly.instantiate(buffer, {})
+                const raw = await fetch("data:application/octet-stream;base64,${read(file, 'compressed-base64')}")
+                const blob = await raw.blob()
+                const decompressed = await blob.stream().pipeThrough(new DecompressionStream("deflate-raw"))
+                const response = new Response(decompressed, { headers: { 'Content-Type': 'application/wasm' } })
+                const x = await WebAssembly.instantiateStreaming(response, {})
                 window.${file.match(/.*\/(.*).wasm$/)[1]} = x.instance.exports
             })()
             window.wasm_ready = window.wasm_ready ? Promise.all(window.wasm_ready, ready) : ready

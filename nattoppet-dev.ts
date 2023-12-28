@@ -1,7 +1,7 @@
 const file = Deno.args[0]
 
 if (Deno.args.length < 1 || file == "--help") {
-    console.log("Usage: nattoppet-dev2 [file] [hook cmd]...")
+    console.log("Usage: nattoppet-dev [file] [hook cmd]...")
     Deno.exit(0)
 }
 

@@ -6,6 +6,19 @@ import coffee from "https://cdn.skypack.dev/coffeescript@^2.6.1"
 import katex from "npm:katex@^0.16.2"
 import less from "npm:less@^4.1.3"
 
+function compress_sync(data: ArrayBuffer) {
+    // https://github.com/denoland/deno/blob/c08319262afeca47d1b9f3dbfa3254e692a48a2d/ext/web/compression.rs#L56
+    // https://github.com/denoland/deno/blob/c08319262afeca47d1b9f3dbfa3254e692a48a2d/ext/web/14_compression.js
+    const ops = Deno[Deno.internal].core.ops
+    const rid = ops.op_compression_new("deflate-raw", false)
+    const output = ops.op_compression_write(rid, data)
+    const output2 = ops.op_compression_finish(rid)
+    const output3 = new Uint8Array(output.length + output2.length)
+    output3.set(output)
+    output3.set(output2, output.length)
+    return output3
+}
+
 export default {
     skip(n: number) {
         this.remaining = this.remaining.substring(n)
@@ -74,6 +87,8 @@ export default {
                 return Deno.readTextFileSync(this.rpath(file))
             case "base64":
                 return base64.encode(Deno.readFileSync(this.rpath(file)))
+            case "compressed-base64":
+                return base64.encode(compress_sync(Deno.readFileSync(this.rpath(file))))
             default:
                 throw "unknown encoding: " + encoding
         }
