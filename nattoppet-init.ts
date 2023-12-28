@@ -32,6 +32,71 @@ if (typeof Deno != 'undefined')
     run({}).then(console.log)
 `)
 
+const gen_wasm = prompt("Generate wasm? (give lib name or empty to cancel): ")
+
+if (gen_wasm) {
+    Deno.writeTextFileSync(`${gen_wasm}.rs`, `\
+#[no_mangle]
+pub unsafe extern fn sum(data: *const u32, len: usize) -> u32 {
+    let mut sum = 0;
+    for i in 0..len {
+        sum += *data.add(i);
+    }
+    sum
+}
+
+#[no_mangle]
+pub unsafe extern fn alloc_memory(byte_size: usize, alignment: usize) -> *mut u8 {
+    let layout = std::alloc::Layout::from_size_align_unchecked(byte_size, alignment);
+    std::alloc::alloc(layout)
+}
+
+#[no_mangle]
+pub unsafe extern fn free_memory(ptr: *mut u8, byte_size: usize, alignment: usize) {
+    let layout = std::alloc::Layout::from_size_align_unchecked(byte_size, alignment);
+    std::alloc::dealloc(ptr, layout)
+}
+`)
+
+    Deno.writeTextFileSync("Cargo.toml", `\
+[package]
+name = "${gen_wasm}"
+version = "0.1.0"
+authors = ["Shiwei Zhang <ylxdzsw@gmail.com>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+path = "${gen_wasm}.rs"
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
+
+[dependencies]
+absurd = { git = "https://github.com/ylxdzsw/absurd" }
+`)
+
+    Deno.writeTextFileSync("main.js", `
+
+async function call_wasm() {
+    await window.wasm_ready
+    const buffer_ptr = ${gen_wasm}.alloc_memory(4 * 8, 4)
+    const buffer_view = new Uint32Array(${gen_wasm}.memory.buffer, buffer_ptr, 8)
+    buffer_view.set([1, 2, 3, 4, 5, 6, 7, 8])
+    const sum = ${gen_wasm}.sum(buffer_ptr, 8)
+    ${gen_wasm}.free_memory(buffer_ptr, 4 * 8, 4)
+    console.log(sum)
+}
+`, { append: true, create: false })
+
+    Deno.writeTextFileSync("main.ymd", `
+[require](target/wasm32-unknown-unknown/release/${gen_wasm}.wasm)
+`, { append: true, create: false })
+}
+
+
 const gen_workflow = prompt("Generate github workflow? (y/n): ")
 
 if (gen_workflow == "y") {
@@ -52,8 +117,16 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
+${gen_wasm ? `
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: wasm32-unknown-unknown
 
-      - name: Build
+      - name: Compile WASM
+        run: cargo build --release --target wasm32-unknown-unknown
+` : ''}
+      - name: Build HTML
         run: deno run -A --unstable https://raw.githubusercontent.com/ylxdzsw/nattoppet/master/nattoppet.ts main.ymd > index.html
 
       - name: Deploy
