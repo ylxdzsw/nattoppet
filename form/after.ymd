@@ -17,8 +17,4 @@ const {opts: [name], args: [attr=""], block: desc} = std_call(true)
 const {opts: [name], args: [attr=""], block: desc} = std_call(true)
 ;`<label><input type="checkbox" name="${name}" ${attr}></input>${interpret(desc).trim()}</label>`
 
-[slider]=
-const {opts: [name], args: [attr=""], block: desc} = std_call(true)
-;`<label>${interpret(desc).trim()}<input type="range" name="${name}" ${attr}></input></label>`
-
 [mixin] common.ymd
