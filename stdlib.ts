@@ -49,9 +49,9 @@ export default {
             args.push(m[1] || m[2])
         }
         const parse_block = () => {
-            const m = this.remaining.match(/^>+/)
+            const m = this.remaining.match(/^(>+)\n?/)
             this.skip(m[0].length)
-            return this.capture_until('<'.repeat(m[0].length))
+            return this.capture_until('<'.repeat(m[1].length))
         }
 
         while (true) {
@@ -67,7 +67,7 @@ export default {
                     return { opts, args, block: parse_block() }
                 case ' ':
                     if (hascontent)
-                        return { opts, args, block: this.capture_until('\n') }
+                        return { opts, args, block: this.capture_until('\n').slice(1) }
                 default:
                     return { opts, args }
             }

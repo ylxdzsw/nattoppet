@@ -80,14 +80,6 @@ const content = text || capture_until('\n').trim() || href
 const {args: [text]} = std_call()
 ;`<sup>${interpret(text)}</sup>`
 
-[$]=
-const tex = capture_until('$')
-render_katex(tex, false)
-
-[$$]=
-const {block} = std_call(true)
-render_katex(block, true)
-
 [eval]=
 const {block} = std_call(true)
 eval(block)
@@ -95,3 +87,8 @@ eval(block)
 [eval*]=
 const {block} = std_call(true)
 eval(block); ''
+
+[cn]=
+interpret(std_call().block)
+    .replace(/([\u4E00-\u9FCC\u3400-\u4DB5\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29]|[\ud840-\ud868][\udc00-\udfff]|\ud869[\udc00-\uded6\udf00-\udfff]|[\ud86a-\ud86c][\udc00-\udfff]|\ud86d[\udc00-\udf34\udf40-\udfff]|\ud86e[\udc00-\udc1d])\r?\n(?=\S)/g, '$1')
+    .replace(/(?<=\S)\r?\n([\u4E00-\u9FCC\u3400-\u4DB5\uFA0E\uFA0F\uFA11\uFA13\uFA14\uFA1F\uFA21\uFA23\uFA24\uFA27-\uFA29]|[\ud840-\ud868][\udc00-\udfff]|\ud869[\udc00-\uded6\udf00-\udfff]|[\ud86a-\ud86c][\udc00-\udfff]|\ud86d[\udc00-\udf34\udf40-\udfff]|\ud86e[\udc00-\udc1d])/g, '$1')

@@ -4,5 +4,5 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[mixin] form/form.less
-[mixin] form/form.js
+[mixin] form.less
+[mixin] form.js

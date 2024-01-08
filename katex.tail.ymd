@@ -1,0 +1,7 @@
+[$]=
+const tex = capture_until('$')
+render_katex(tex, false)
+
+[$$]=
+const {block} = std_call(true)
+render_katex(block, true)

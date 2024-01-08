@@ -37,8 +37,8 @@ const tokenize = async (str: string) => {
 
         const p1 = str.indexOf('\n\n')
         const p2 = str.search(pattern)
-        const p = p1 >= 0 && p2 >= 0 ? Math.min(p1+1, p2) :
-                  p1 < 0 && p2 < 0 ? str.length : Math.max(p1+1, p2)
+        const p = p1 >= 0 && p2 >= 0 ? Math.min(p1+2, p2) :
+                  p1 < 0 && p2 < 0 ? str.length : Math.max(p1+2, p2)
 
         const content = str.substring(0, p).trim()
         str = str.substring(p)
@@ -51,10 +51,10 @@ const tokenize = async (str: string) => {
 
         switch (extname(path)) {
             case "": {
-                const before = await tokenize(await fetch_text_file(path + "/before.ymd"))
-                const after = await tokenize(await fetch_text_file(path + "/after.ymd"))
-                tokens.splice(i, 1, ...before)
-                tokens.push(...after)
+                const head = await tokenize(await fetch_text_file(path + ".head.ymd"))
+                const tail = await tokenize(await fetch_text_file(path + ".tail.ymd"))
+                tokens.splice(i, 1, ...head)
+                tokens.push(...tail)
                 break
             }
             case ".ymd": {
@@ -102,7 +102,7 @@ const _interpret = (str: string, env: any, defs: any[]): any => {
         str = str.substring(p1+2)
         let p = str.indexOf('\n\n')
         if (p < 0) p = str.length
-        return head + '<p>' + _interpret(str.substring(0, p), env, defs) + '</p>' + _interpret(str.substring(p+1), env, defs)
+        return head + '<p>' + _interpret(str.substring(0, p), env, defs) + '</p>' + _interpret(str.substring(p+2), env, defs)
     }
 
     const name = str.match(/\[(.+?)\]/)![1]

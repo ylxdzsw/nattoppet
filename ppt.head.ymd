@@ -4,7 +4,5 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[mixin] tml/tml.less
-[mixin] tml/tml.coffee
-
-[eval*] this.index = 0
+[mixin] ppt.less
+[mixin] ppt.coffee

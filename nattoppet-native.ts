@@ -1,10 +1,66 @@
-const init = async () => {
+const main_source = `\
+#![windows_subsystem = "windows"]
+
+use web_view::*;
+
+fn main() {
+    static HTML_CONTENT: &str = include_str!("../target/bundle.html");
+
+    web_view::builder()
+        .title("Nattoppet Native")
+        .content(Content::Html(HTML_CONTENT))
+        .size(600, 480)
+        .resizable(false)
+        .debug(cfg!(debug_assertions))
+        .user_data(())
+        .invoke_handler(handler)
+        .run()
+        .unwrap();
+}
+
+fn handler(webview: &mut WebView<()>, arg: &str) -> WVResult {
+    Ok(())
+}
+`
+
+const build_source = `\
+#[cfg(windows)]
+extern crate winres;
+
+#[cfg(windows)]
+fn main() {
+    let mut res = winres::WindowsResource::new();
+    res.set_icon("../icon.ico");
+    res.compile().unwrap();
+}
+
+#[cfg(not(windows))]
+fn main() {}
+`
+
+const cargo_source = `\
+[package]
+name = "nattoppet_native"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+web-view = { version = "0.7", features = ["edge"] }
+
+[target.'cfg(windows)'.build-dependencies]
+winres = "0.1"
+
+[package.metadata.winres]
+ProductName = "A nattoppet native app"
+`
+
+const init = () => {
     Deno.mkdirSync('native')
     Deno.mkdirSync('native/src')
     Deno.mkdirSync('native/target')
-    Deno.writeTextFileSync("native/src/main.rs", await (await fetch(new URL("native/src/main.rs", import.meta.url))).text())
-    Deno.writeTextFileSync("native/build.rs", await (await fetch(new URL("native/build.rs", import.meta.url))).text())
-    Deno.writeTextFileSync("native/Cargo.toml", await (await fetch(new URL("native/Cargo.toml", import.meta.url))).text())
+    Deno.writeTextFileSync("native/src/main.rs", main_source)
+    Deno.writeTextFileSync("native/build.rs", build_source)
+    Deno.writeTextFileSync("native/Cargo.toml", cargo_source)
 }
 
 const bundle = async () => {
