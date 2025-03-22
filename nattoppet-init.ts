@@ -46,13 +46,13 @@ pub unsafe extern fn sum(data: *const u32, len: usize) -> u32 {
 }
 
 #[no_mangle]
-pub unsafe extern fn alloc_memory(byte_size: usize, alignment: usize) -> *mut u8 {
+pub unsafe extern "C" fn alloc_memory(byte_size: usize, alignment: usize) -> *mut u8 {
     let layout = std::alloc::Layout::from_size_align_unchecked(byte_size, alignment);
     std::alloc::alloc(layout)
 }
 
 #[no_mangle]
-pub unsafe extern fn free_memory(ptr: *mut u8, byte_size: usize, alignment: usize) {
+pub unsafe extern "C" fn free_memory(ptr: *mut u8, byte_size: usize, alignment: usize) {
     let layout = std::alloc::Layout::from_size_align_unchecked(byte_size, alignment);
     std::alloc::dealloc(ptr, layout)
 }
@@ -63,7 +63,7 @@ pub unsafe extern fn free_memory(ptr: *mut u8, byte_size: usize, alignment: usiz
 name = "${gen_wasm}"
 version = "0.1.0"
 authors = ["Shiwei Zhang <ylxdzsw@gmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [lib]
 crate-type = ["cdylib"]
@@ -114,9 +114,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: v1.x
+          deno-version: v2.x
 ${gen_wasm ? `
       - name: Install Rust
         uses: dtolnay/rust-toolchain@nightly
@@ -130,7 +130,7 @@ ${gen_wasm ? `
         run: deno run -A https://raw.githubusercontent.com/ylxdzsw/nattoppet/master/nattoppet.ts main.ymd > index.html
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.4.1
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: "."
