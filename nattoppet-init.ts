@@ -127,7 +127,7 @@ ${gen_wasm ? `
         run: cargo build --release --target wasm32-unknown-unknown
 ` : ''}
       - name: Build HTML
-        run: deno run -A --unstable https://raw.githubusercontent.com/ylxdzsw/nattoppet/master/nattoppet.ts main.ymd > index.html
+        run: deno run -A https://raw.githubusercontent.com/ylxdzsw/nattoppet/master/nattoppet.ts main.ymd > index.html
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.4.1

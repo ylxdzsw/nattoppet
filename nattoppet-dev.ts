@@ -42,7 +42,6 @@ if (Deno.args.length < 1 || file == "--help") {
                     Deno.execPath(),
                     "run",
                     "-A",
-                    "--unstable",
                     "--no-check",
                     new URL("nattoppet.ts", import.meta.url).href,
                     file,

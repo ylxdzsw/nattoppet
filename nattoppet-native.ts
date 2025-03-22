@@ -69,7 +69,6 @@ const bundle = async () => {
             Deno.execPath(),
             "run",
             "-A",
-            "--unstable",
             "--no-check",
             new URL("nattoppet.ts", import.meta.url).href,
             Deno.args[1]
