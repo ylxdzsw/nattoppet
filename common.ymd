@@ -13,7 +13,7 @@ switch (extname(file)) {
     case 'md':
         render_markdown(content); break
     case 'wasm':
-        `<script type="module" ${id ? `id="${id}"` : ''}>
+        `<script ${id ? `id="${id}"` : ''}>
             const ready = (async () => {
                 const raw = await fetch("data:application/octet-stream;base64,${read(file, 'compressed-base64')}")
                 const blob = await raw.blob()
@@ -25,7 +25,7 @@ switch (extname(file)) {
             window.wasm_ready = window.wasm_ready ? Promise.all([window.wasm_ready, ready]) : ready
         </script>`; break
     case 'json':
-        `<script type="module" ${id ? `id="${id}"` : ''}>
+        `<script ${id ? `id="${id}"` : ''}>
             const ready = (async () => {
                 const raw = await fetch("data:application/octet-stream;base64,${read(file, 'compressed-base64')}")
                 const blob = await raw.blob()
