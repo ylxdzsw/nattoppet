@@ -1,24 +1,15 @@
-import * as path from "https://deno.land/std@0.181.0/path/mod.ts"
-import * as base64 from "https://deno.land/std@0.181.0/encoding/base64.ts"
-import * as zlib from 'node:zlib'
+import * as path from "node:path"
+import * as fs from "node:fs"
+import * as zlib from "node:zlib"
 
-import * as marked from "npm:marked@^4.0.10"
-import coffee from "https://cdn.skypack.dev/coffeescript@^2.6.1"
-import katex from "npm:katex@^0.16.2"
-import less from "npm:less@^4.1.3"
+import { marked } from "marked"
+import coffee from "coffeescript"
+import katex from "katex"
+import less from "less"
 
 function compress_sync(data: ArrayBuffer) {
-    // https://github.com/denoland/deno/blob/c08319262afeca47d1b9f3dbfa3254e692a48a2d/ext/web/compression.rs#L56
-    // https://github.com/denoland/deno/blob/c08319262afeca47d1b9f3dbfa3254e692a48a2d/ext/web/14_compression.js
-    // const ops = Deno[Deno.internal].core.ops
-    // const rid = ops.op_compression_new("deflate-raw", false)
-    // const output = ops.op_compression_write(rid, data)
-    // const output2 = ops.op_compression_finish(rid)
-    // const output3 = new Uint8Array(output.length + output2.length)
-    // output3.set(output)
-    // output3.set(output2, output.length)
-    // return output3
-
+    // Keep using zlib.deflateRawSync for browser compatibility
+    // Browser uses DecompressionStream("deflate-raw") which expects raw deflate
     return zlib.deflateRawSync(new Uint8Array(data), {
         flush: zlib.constants.Z_FINISH,
         level: zlib.constants.Z_BEST_COMPRESSION
@@ -87,14 +78,15 @@ export default {
     },
 
     read(file: string, encoding = "utf-8") {
+        const filePath = this.rpath(file)
         switch (encoding) {
             case "utf8":
             case "utf-8":
-                return Deno.readTextFileSync(this.rpath(file))
+                return fs.readFileSync(filePath, 'utf-8')
             case "base64":
-                return base64.encode(Deno.readFileSync(this.rpath(file)))
+                return Buffer.from(fs.readFileSync(filePath)).toString('base64')
             case "compressed-base64":
-                return base64.encode(compress_sync(Deno.readFileSync(this.rpath(file))))
+                return Buffer.from(compress_sync(fs.readFileSync(filePath))).toString('base64')
             default:
                 throw "unknown encoding: " + encoding
         }

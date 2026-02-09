@@ -1,23 +1,28 @@
-import * as path from "https://deno.land/std@0.181.0/path/mod.ts"
-import minifier from "npm:html-minifier-terser@^6.1.0"
+import * as path from "node:path"
+import * as fs from "node:fs"
+import minifier from "html-minifier-terser"
 
 import stdlib from "./stdlib.ts"
 import * as compiler from "./compiler.ts"
 
 const compiled = await (async () => {
-    const file = Deno.args[0]
+    const file = process.argv[2]
     if (file) {
         const dir = path.dirname(path.resolve(file))
-        const code = Deno.readTextFileSync(file)
+        const code = fs.readFileSync(file, 'utf-8')
         return await compiler.compile(code, { ...stdlib, base_dir: dir })
     } else {
-        const dir = Deno.cwd()
-        const code = await new Response(Deno.stdin.readable).text()
+        const dir = process.cwd()
+        const chunks: Uint8Array[] = []
+        for await (const chunk of process.stdin) {
+            chunks.push(chunk)
+        }
+        const code = Buffer.concat(chunks).toString('utf-8')
         return await compiler.compile(code, { ...stdlib, base_dir: dir })
     }
 })()
 
-const minified = Deno.args.includes('--dev') ? compiled : await minifier.minify(compiled, {
+const minified = process.argv.includes('--dev') ? compiled : await minifier.minify(compiled, {
     collapseWhitespace: true,
     removeAttributeQuotes: true,
     removeComments: true,
@@ -27,6 +32,4 @@ const minified = Deno.args.includes('--dev') ? compiled : await minifier.minify(
     minifyJS: true,
 })
 
-const output_stream = new TextEncoderStream()
-output_stream.readable.pipeTo(Deno.stdout.writable)
-await output_stream.writable.getWriter().write(minified)
+process.stdout.write(minified)

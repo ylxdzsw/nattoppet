@@ -1,0 +1,4 @@
+node_modules/
+*.lock
+*.html
+!test/fixtures/*.html

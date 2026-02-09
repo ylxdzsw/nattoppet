@@ -1,13 +1,15 @@
-const type = Deno.args[0]
+import * as fs from "node:fs"
+
+const type = process.argv[2]
 
 const avaliable_templates = ["form"]
 
-if (Deno.args.length != 1 || !avaliable_templates.includes(type)) {
+if (process.argv.length < 3 || !avaliable_templates.includes(type)) {
     console.log("Usage: nattoppet-init form")
-    Deno.exit(0)
+    process.exit(0)
 }
 
-Deno.writeTextFileSync("main.ymd", `\
+fs.writeFileSync("main.ymd", `\
 [mixin] ${type}
 
 [title]: Page Title
@@ -23,7 +25,7 @@ Deno.writeTextFileSync("main.ymd", `\
 [require](main.js)
 `)
 
-Deno.writeTextFileSync("main.js", `\
+fs.writeFileSync("main.js", `\
 async function run(args) {
     return JSON.stringify(args)
 }
@@ -35,7 +37,7 @@ if (typeof Deno != 'undefined')
 const gen_wasm = prompt("Generate wasm? (give lib name or empty to cancel): ")
 
 if (gen_wasm) {
-    Deno.writeTextFileSync(`${gen_wasm}.rs`, `\
+    fs.writeFileSync(`${gen_wasm}.rs`, `\
 #[no_mangle]
 pub unsafe extern fn sum(data: *const u32, len: usize) -> u32 {
     let mut sum = 0;
@@ -58,7 +60,7 @@ pub unsafe extern "C" fn free_memory(ptr: *mut u8, byte_size: usize, alignment: 
 }
 `)
 
-    Deno.writeTextFileSync("Cargo.toml", `\
+    fs.writeFileSync("Cargo.toml", `\
 [package]
 name = "${gen_wasm}"
 version = "0.1.0"
@@ -78,7 +80,7 @@ strip = true
 absurd = { git = "https://github.com/ylxdzsw/absurd" }
 `)
 
-    Deno.writeTextFileSync("main.js", `
+    fs.appendFileSync("main.js", `
 
 async function call_wasm() {
     await window.wasm_ready
@@ -89,20 +91,20 @@ async function call_wasm() {
     ${gen_wasm}.free_memory(buffer_ptr, 4 * 8, 4)
     console.log(sum)
 }
-`, { append: true, create: false })
+`)
 
-    Deno.writeTextFileSync("main.ymd", `
+    fs.appendFileSync("main.ymd", `
 [require](target/wasm32-unknown-unknown/release/${gen_wasm}.wasm)
-`, { append: true, create: false })
+`)
 }
 
 
 const gen_workflow = prompt("Generate github workflow? (y/n): ")
 
 if (gen_workflow == "y") {
-    Deno.mkdirSync(".github")
-    Deno.mkdirSync(".github/workflows")
-    Deno.writeTextFileSync(".github/workflows/pages.yml", `\
+    fs.mkdirSync(".github", { recursive: true })
+    fs.mkdirSync(".github/workflows", { recursive: true })
+    fs.writeFileSync(".github/workflows/pages.yml", `\
 name: Build and deploy to pages
 on: [push]
 
@@ -113,10 +115,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Deno
-        uses: denoland/setup-deno@v2
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          deno-version: v2.x
+          bun-version: latest
 ${gen_wasm ? `
       - name: Install Rust
         uses: dtolnay/rust-toolchain@nightly
@@ -127,7 +129,7 @@ ${gen_wasm ? `
         run: cargo build --release --target wasm32-unknown-unknown
 ` : ''}
       - name: Build HTML
-        run: deno run -A https://raw.githubusercontent.com/ylxdzsw/nattoppet/master/nattoppet.ts main.ymd > index.html
+        run: bun run nattoppet.ts main.ymd > index.html
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4

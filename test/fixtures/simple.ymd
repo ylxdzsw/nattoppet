@@ -1,0 +1,26 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>My Simple Page</title>
+
+[mixin] vue
+
+[title]: Simple Test Page
+
+[h2]Welcome
+This is a simple test page demonstrating nattoppet compilation.
+
+[h3]Features
+
+[-] Simple syntax
+[-] Easy to use
+[-] Fast compilation
+
+[h3]Code Example
+
+[code](javascript)>
+function hello() {
+    console.log("Hello, World!");
+}
+<
+
+[link](https://github.com/ylxdzsw/nattoppet, View on GitHub)
