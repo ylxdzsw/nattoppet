@@ -53,6 +53,11 @@ bun run nattoppet-native.ts init
 bun run nattoppet-native.ts build in.ymd
 ```
 
+**Note:** Native builds require system dependencies (GTK, WebKit). On Arch Linux:
+```bash
+pacman -S base-devel cairo gtk3 webkit2gtk pkgconf
+```
+
 ### Migration from Deno
 
 This project has been migrated from Deno to Bun. See [MIGRATION-SUMMARY.md](MIGRATION-SUMMARY.md) for details.
