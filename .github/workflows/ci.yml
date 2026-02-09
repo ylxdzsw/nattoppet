@@ -13,7 +13,6 @@ jobs:
         include:
           - { name: linux-x64, os: ubuntu-latest, outfile: nattoppet-linux-x64 }
           - { name: macos-x64, os: macos-latest, outfile: nattoppet-macos-x64 }
-          - { name: windows-x64, os: windows-latest, outfile: nattoppet-windows-x64.exe }
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
@@ -40,7 +39,6 @@ jobs:
           mkdir -p artifacts
           mv nattoppet-linux-x64/nattoppet-linux-x64 artifacts/nattoppet-linux-x64
           mv nattoppet-macos-x64/nattoppet-macos-x64 artifacts/nattoppet-macos-x64
-          mv nattoppet-windows-x64/nattoppet-windows-x64.exe artifacts/nattoppet-windows-x64.exe
       - uses: softprops/action-gh-release@v1
         with:
           draft: true
