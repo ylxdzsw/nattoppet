@@ -1,0 +1,9 @@
+{
+  "nodeModulesDir": "auto",
+  "imports": {
+    "npm:html-minifier-terser": "npm:html-minifier-terser@^6.1.0",
+    "npm:marked": "npm:marked@^4.0.10",
+    "npm:katex": "npm:katex@^0.16.2",
+    "npm:less": "npm:less@^4.1.3"
+  }
+}
