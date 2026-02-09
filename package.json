@@ -1,6 +1,6 @@
 {
   "name": "nattoppet",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "A tiny macro-based markup language for blogging",
   "author": "ylxdzsw <ylxdzsw@gmail.com>",
   "license": "MIT",
