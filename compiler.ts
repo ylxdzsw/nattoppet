@@ -1,17 +1,19 @@
-import { extname } from "https://deno.land/std@0.181.0/path/mod.ts"
+import { extname } from "node:path"
+import { fileURLToPath } from "node:url"
+import * as fs from "node:fs"
 import stdlib from "./stdlib.ts"
 
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
 const fetch_text_file = async (path: string) => {
-    const res = await fetch(new URL(path, import.meta.url))
-    return await res.text()
+    const filePath = new URL(path, import.meta.url)
+    return fs.readFileSync(fileURLToPath(filePath), 'utf-8')
 }
 
 // tokenize also process mixins
 // mixins are special direvatives
 // by default, they are relative to the root directory of nattoppet, unless they are prefixed with "./"
-const tokenize = async (str: string) => {
+export const tokenize = async (str: string) => {
     const tokens: any[] = []
 
     while (true) {
@@ -129,7 +131,7 @@ const _interpret = (str: string, env: any, defs: any[]): any => {
             return str.substring(0, p2) + result + _interpret(env.remaining, env, defs)
         case 'ref':
             return str.substring(0, p2) +
-                _interpret(def.content, env, defs.slice(i+1)) + // However for ref we use lexical scoping. Exclude self to prevent recusion
+                _interpret(def.content, env, defs.slice(i+1)) + // Exclude self from scope to prevent infinite recursion, but allow forward references
                 _interpret(str.substring(p2 + name.length + 2), env, defs)
         default: throw 'unknown defs type'
     }

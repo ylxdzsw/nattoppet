@@ -1,11 +1,11 @@
-import * as path from "https://deno.land/std@0.181.0/path/mod.ts"
-import * as base64 from "https://deno.land/std@0.181.0/encoding/base64.ts"
-import * as zlib from 'node:zlib'
+import * as path from "node:path"
+import * as fs from "node:fs"
+import * as zlib from "node:zlib"
 
-import * as marked from "npm:marked@^4.0.10"
-import coffee from "https://cdn.skypack.dev/coffeescript@^2.6.1"
-import katex from "npm:katex@^0.16.2"
-import less from "npm:less@^4.1.3"
+import { marked } from "marked"
+import coffee from "coffeescript"
+import katex from "katex"
+import less from "less"
 
 function compress_sync(data: ArrayBuffer) {
     // https://github.com/denoland/deno/blob/c08319262afeca47d1b9f3dbfa3254e692a48a2d/ext/web/compression.rs#L56
@@ -87,14 +87,15 @@ export default {
     },
 
     read(file: string, encoding = "utf-8") {
+        const filePath = this.rpath(file)
         switch (encoding) {
             case "utf8":
             case "utf-8":
-                return Deno.readTextFileSync(this.rpath(file))
+                return fs.readFileSync(filePath, 'utf-8')
             case "base64":
-                return base64.encode(Deno.readFileSync(this.rpath(file)))
+                return Buffer.from(fs.readFileSync(filePath)).toString('base64')
             case "compressed-base64":
-                return base64.encode(compress_sync(Deno.readFileSync(this.rpath(file))))
+                return Buffer.from(compress_sync(fs.readFileSync(filePath))).toString('base64')
             default:
                 throw "unknown encoding: " + encoding
         }

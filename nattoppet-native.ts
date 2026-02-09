@@ -1,3 +1,7 @@
+import * as fs from "node:fs"
+import * as path from "node:path"
+import { fileURLToPath } from "node:url"
+
 const main_source = `\
 #![windows_subsystem = "windows"]
 
@@ -55,42 +59,46 @@ ProductName = "A nattoppet native app"
 `
 
 const init = () => {
-    Deno.mkdirSync('native')
-    Deno.mkdirSync('native/src')
-    Deno.mkdirSync('native/target')
-    Deno.writeTextFileSync("native/src/main.rs", main_source)
-    Deno.writeTextFileSync("native/build.rs", build_source)
-    Deno.writeTextFileSync("native/Cargo.toml", cargo_source)
+    fs.mkdirSync('native', { recursive: true })
+    fs.mkdirSync('native/src', { recursive: true })
+    fs.mkdirSync('native/target', { recursive: true })
+    fs.writeFileSync("native/src/main.rs", main_source)
+    fs.writeFileSync("native/build.rs", build_source)
+    fs.writeFileSync("native/Cargo.toml", cargo_source)
 }
 
 const bundle = async () => {
-    const child = Deno.run({
-        cmd: [
-            Deno.execPath(),
-            "run",
-            "-A",
-            "--no-check",
-            new URL("nattoppet.ts", import.meta.url).href,
-            Deno.args[1]
-        ],
-        stdout: "piped",
-        stderr: "piped"
+    const nattoppetPath = fileURLToPath(new URL("nattoppet.ts", import.meta.url))
+    const proc = Bun.spawn([
+        process.execPath,
+        "run",
+        nattoppetPath,
+        process.argv[3]
+    ], {
+        stdout: 'pipe',
+        stderr: 'pipe'
     })
-    const [stdout, stderr] = await Promise.all([child.output(), child.stderrOutput()])
-    if (stderr.length)
-        console.error(new TextDecoder().decode(stderr))
-    Deno.writeFileSync('native/target/bundle.html', stdout)
+    
+    const [stdout, stderr] = await Promise.all([
+        new Response(proc.stdout).arrayBuffer(),
+        new Response(proc.stderr).text()
+    ])
+    
+    if (stderr)
+        console.error(stderr)
+    
+    fs.writeFileSync('native/target/bundle.html', new Uint8Array(stdout))
 }
 
 const build = async () => {
     await bundle()
-    const child = Deno.run({
-        cmd: ['cargo', 'build', '--release'],
+    const proc = Bun.spawn(['cargo', 'build', '--release'], {
         cwd: 'native'
     })
-    const status = await child.status()
-    if (status.code != 0) {
-        console.error("Cargo exit with code: " + status.code)
+    
+    const exitCode = await proc.exited
+    if (exitCode != 0) {
+        console.error("Cargo exit with code: " + exitCode)
     } else {
         console.log("building finished. Check native/target/release/")
     }
@@ -100,7 +108,7 @@ const help = () => {
     console.log("Usage: nattoppet-native [init|bundle|build] <file.ymd>")
 }
 
-switch (Deno.args[0]) {
+switch (process.argv[2]) {
     case 'init': init(); break
     case 'bundle': bundle(); break
     case 'build': build(); break

@@ -1,72 +1,96 @@
-const file = Deno.args[0]
+import * as fs from "node:fs"
+import * as path from "node:path"
+import { fileURLToPath } from "node:url"
 
-if (Deno.args.length < 1 || file == "--help") {
+const file = process.argv[2]
+
+if (process.argv.length < 3 || file == "--help") {
     console.log("Usage: nattoppet-dev [file] [hook cmd]...")
-    Deno.exit(0)
+    process.exit(0)
 }
 
-;(async () => {
-    const server = Deno.listen({ port: 3939 })
-    for await (const conn of server) (async () => {
-        const httpConn = Deno.serveHttp(conn)
-        for await (const { respondWith, request: { url } } of httpConn) (async () => {
-            if (new URL(url).pathname != '/') {
-                try {
-                    const file = await Deno.open(new URL(url).pathname.slice(1), { read: true })
-                    await respondWith(new Response(file.readable, {
-                        status: 200
-                    }))
-                } catch (e) {
-                    if (new URL(url).pathname == "/favicon.ico")
-                        return
+const nattoppetPath = fileURLToPath(new URL("nattoppet.ts", import.meta.url))
+
+Bun.serve({
+    port: 3939,
+    async fetch(request) {
+        const url = new URL(request.url)
+        
+        // Static file serving
+        if (url.pathname !== '/') {
+            try {
+                const filePath = path.join(process.cwd(), url.pathname)
+                const file = Bun.file(filePath)
+                if (await file.exists()) {
+                    return new Response(file)
+                }
+            } catch (e) {
+                if (url.pathname !== "/favicon.ico") {
                     console.error(e)
                 }
-
-                return
             }
-
-            if (Deno.args.length > 1) {
-                // TODO: lock? currently I only run cargo which has its own lock.
-                const status = await Deno.run({
-                    cmd: Deno.args.slice(1)
-                }).status()
-
-                if (status.code != 0) {
-                    console.warn("!!! hook command exit with non-0 status")
-                    return
-                }
+            return new Response("Not found", { status: 404 })
+        }
+        
+        // Run build hooks if specified
+        if (process.argv.length > 3) {
+            const hookProc = Bun.spawn(process.argv.slice(3))
+            const exitCode = await hookProc.exited
+            
+            if (exitCode !== 0) {
+                console.warn("!!! hook command exit with non-0 status")
+                return new Response("Hook command failed", { status: 500 })
             }
+        }
+        
+        // Compile the nattoppet file
+        const compileProc = Bun.spawn([
+            process.execPath,
+            "run",
+            nattoppetPath,
+            file,
+            "--dev"
+        ], {
+            stdout: 'pipe',
+            stderr: 'pipe'
+        })
+        
+        const [stdout, stderr] = await Promise.all([
+            new Response(compileProc.stdout).arrayBuffer(),
+            new Response(compileProc.stderr).text()
+        ])
+        
+        const exitCode = await compileProc.exited
+        
+        if (stderr) {
+            console.error(stderr)
+        }
+        
+        const content = exitCode === 0 ? new Uint8Array(stdout) : new TextEncoder().encode("Compilation failed")
+        
+        return new Response(content, {
+            headers: {
+                "Content-Type": "text/html"
+            },
+            status: 200
+        })
+    }
+})
 
-            const child = Deno.run({
-                cmd: [
-                    Deno.execPath(),
-                    "run",
-                    "-A",
-                    "--no-check",
-                    new URL("nattoppet.ts", import.meta.url).href,
-                    file,
-                    "--dev"
-                ],
-                stdout: "piped"
-            })
+console.log("Server running at http://127.0.0.1:3939")
 
-            const output = await child.output()
-            const status = await child.status()
+// Open browser
+const platform = process.platform
+const browser = process.env.BROWSER ?? (
+    platform === 'darwin' ? 'open' :
+    platform === 'win32' ? 'start' :
+    'xdg-open'
+)
 
-            const content = status.code == 0 ? output : "failed"
+const browserCmd = browser.includes('chrom')
+    ? [browser, "--app=http://127.0.0.1:3939"]
+    : [browser, "http://127.0.0.1:3939"]
 
-            await respondWith(new Response(content, {
-                headers: {
-                    "Content-Type": "text/html"
-                },
-                status: 200
-            }))
-        })().catch(e => console.error(e))
-    })().catch(e => console.error(e))
-})().catch(e => console.error(e))
-
-const browser = Deno.env.get("BROWSER") ?? ({ darwin: 'open', windows: 'start', linux: 'xdg-open' })[Deno.build.os] ?? 'xdg-open'
-
-browser.includes('chrom')
-    ? Deno.run({ cmd: [browser, "--app=http://127.0.0.1:3939"] })
-    : Deno.run({ cmd: [browser, "http://127.0.0.1:3939"] })
+Bun.spawn(browserCmd, { 
+    stdio: ['ignore', 'ignore', 'ignore']
+})

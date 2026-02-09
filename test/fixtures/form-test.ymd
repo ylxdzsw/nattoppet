@@ -1,0 +1,15 @@
+[mixin] form
+
+[title]: Calculator Form
+
+[h3]Input Values
+
+[text].first_name First Name
+[text](placeholder="LastName").last_name Last Name
+[number].age Age
+[number](min="0" max="100").score Test Score
+
+[checkbox].subscribe Subscribe to newsletter
+[checkbox].agree Agree to terms
+
+[require](test-data.js)
