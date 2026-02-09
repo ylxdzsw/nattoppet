@@ -1,8 +1,4 @@
 node_modules/
-native/
-target/
 *.lock
-*.log
-.DS_Store
 *.html
 !test/fixtures/*.html

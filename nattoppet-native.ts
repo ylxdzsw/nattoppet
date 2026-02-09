@@ -87,7 +87,7 @@ const bundle = async () => {
     if (stderr)
         console.error(stderr)
     
-    fs.writeFileSync('native/target/bundle.html', new Uint8Array(stdout))
+    await Bun.write('native/target/bundle.html', stdout)
 }
 
 const build = async () => {
