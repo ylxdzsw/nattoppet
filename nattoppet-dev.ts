@@ -19,17 +19,15 @@ Bun.serve({
         // Static file serving
         if (url.pathname !== '/') {
             try {
-                const filePath = path.join(process.cwd(), url.pathname)
+                const filePath = path.join(process.cwd(), decodeURIComponent(url.pathname))
                 const file = Bun.file(filePath)
                 if (await file.exists()) {
                     return new Response(file)
                 }
             } catch (e) {
-                if (url.pathname !== "/favicon.ico") {
-                    console.error(e)
-                }
+                console.error(e)
             }
-            return new Response("Not found", { status: 404 })
+            return new Response(null, { status: 404 })
         }
         
         // Run build hooks if specified
