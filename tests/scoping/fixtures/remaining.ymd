@@ -1,0 +1,10 @@
+[process][a]X[b]Y
+
+[process]=
+const a = this.interpret(this.capture_until('X'))
+const b = this.interpret(this.capture_until('Y'))
+a + '-' + b
+
+[a]: ALPHA
+
+[b]: BETA

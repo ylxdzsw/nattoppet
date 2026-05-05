@@ -1,0 +1,6 @@
+Value: [caller]
+
+[caller]=
+this.interpret('[target]')
+
+[target]: DYNAMIC

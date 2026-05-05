@@ -1,0 +1,7 @@
+[wrapper] after
+
+[wrapper]: [shadow]
+
+[shadow]: FIRST
+
+[shadow]: SECOND

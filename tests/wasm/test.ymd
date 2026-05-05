@@ -1,0 +1,6 @@
+<!doctype html>
+<title>WASM Test</title>
+
+[require](fixtures/test.wasm)
+
+[mixin] common.ymd

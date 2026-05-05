@@ -1,0 +1,3 @@
+[self] after
+
+[self]: hello [self] world

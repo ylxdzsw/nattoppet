@@ -39,7 +39,7 @@ A tiny macro-based markup language and themes for making documents, slides, or w
 | `stdlib.ts` | Standard library: file utils, compression, and renderers (md, less, coffee, katex). |
 | `*.ymd` | Built-in theme/mixin templates (vue, form, koa, ppt, tml, katex, common). |
 | `*.css`, `*.js` | Static assets referenced by mixins. |
-| `test/` | Integration tests and fixtures. |
+| `tests/` | Integration tests organized by feature, each subfolder contains a test file and fixtures. |
 | `.github/workflows/ci.yml` | CI pipeline: install, test, build native binaries, draft release. |
 
 ## Development
@@ -64,7 +64,7 @@ bun run typecheck
 bun test
 
 # Run a single test file
-bun test test/integration.test.ts
+bun test tests/scoping/scoping.test.ts
 
 # Run tests in watch mode
 bun test --watch
@@ -90,7 +90,7 @@ bun run nattoppet-init.ts form
 
 ## Code Style
 
-- **Indentation**: 4 spaces in core source (`compiler.ts`, `stdlib.ts`, CLI files); 2 spaces in test files.
+- **Indentation**: 4 spaces everywhere (core source and tests).
 - **Quotes**: Single quotes for strings.
 - **Semicolons**: Omit optional semicolons.
 - **Imports**: Use `node:` prefix for Node.js built-ins (e.g., `node:fs`, `node:path`). Import with `.ts` extensions.
