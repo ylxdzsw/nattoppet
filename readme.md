@@ -2,6 +2,7 @@ nattoppet
 =========
 
 A tiny markup language and themes for making documents, slides, or web apps as single-file bundled html or executables.
+Only tested on Unix-like systems (Linux, macOS).
 
 ### Usage
 
