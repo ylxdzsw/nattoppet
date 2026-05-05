@@ -119,3 +119,4 @@ The following real-world projects demonstrate different nattoppet usage patterns
 - Mixin paths without extensions resolve to `.ymd` if an exact file does not exist.
 - The project intentionally avoids formatters/linters and `tsconfig.json` to stay minimal; Bun transpiles TypeScript at runtime without static type checking.
 - Version 4.0 is a Bun port from the previous Deno-based 3.0, completed as an AI experiment.
+- **KaTeX upgrade workflow**: `katex.css` is vendored at the repo root with all `woff2` fonts inlined as base64 data URIs so that `[mixin] katex` produces fully self-contained HTML. When upgrading KaTeX, bump the exact (non-caret) version in `package.json`, run `bun install`, then regenerate `katex.css` by inlining the `woff2` font references from `node_modules/katex/dist/katex.min.css`. The version must be pinned exactly to prevent a mismatch between the `katex` JS renderer and the vendored CSS.
