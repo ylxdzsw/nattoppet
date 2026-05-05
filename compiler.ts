@@ -1,3 +1,4 @@
+import vm from "node:vm"
 import { extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import * as fs from "node:fs"
@@ -129,13 +130,7 @@ const _interpret = (str: string, env: any, defs: any[]): any => {
                 env.remaining = remaining
                 return result
             }
-            // const result = vm.runInContext('{' + def.content + '}', env)
-            for (const k in env) {
-                if (env.hasOwnProperty(k))
-                    // @ts-ignore
-                    globalThis[k] = env[k]
-            }
-            const result = (1, eval)('{' + def.content + '}')
+            const result = vm.runInContext('{' + def.content + '}', env)
             return str.substring(0, p2) + result + _interpret(env.remaining, env, defs)
         case 'ref':
             return str.substring(0, p2) +
@@ -146,8 +141,7 @@ const _interpret = (str: string, env: any, defs: any[]): any => {
 }
 
 export const compile = async (str: string, locals: any = {}) => {
-    // const env = vm.createContext(locals)
-    const env: any = locals
+    const env = vm.createContext(locals)
     for (const k in env) if (typeof(env[k]) == 'function')
         env[k] = env[k].bind(env)
 
@@ -172,5 +166,4 @@ TODO:
 1. support first-class markdown-like nestable lists
 2. cleanup the spaces, carefully define when to trim
 3. require a newline before indent to open paragraph?
-4. rewrite with vm when it (or anything equivalent) get added to deno
 */
