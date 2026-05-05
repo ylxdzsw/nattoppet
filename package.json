@@ -23,7 +23,7 @@
   "dependencies": {
     "coffeescript": "^2.7.0",
     "html-minifier-terser": "^7.2.0",
-    "katex": "^0.16.9",
+    "katex": "0.16.45",
     "less": "^4.2.0",
     "marked": "^9.1.6"
   },
