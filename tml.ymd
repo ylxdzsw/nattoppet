@@ -14,7 +14,7 @@
 
 [eval*] this.index = 0
 
-[slot]
+[#slot]
 
 [eval] this.index > 0 ? "</article>" : ''
 

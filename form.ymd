@@ -12,7 +12,7 @@
 [mixin] form.js
 </script>
 
-[slot]
+[#slot]
 
 <button>Run</button>
 <pre class="hidden"></pre>

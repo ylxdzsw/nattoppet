@@ -2,7 +2,7 @@
 [mixin] katex.css
 </style>
 
-[slot]
+[#slot]
 
 [$]=
 const tex = capture_until('$')

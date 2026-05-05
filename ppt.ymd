@@ -12,7 +12,7 @@
 [mixin] ppt.js
 </script>
 
-[slot]
+[#slot]
 
 [eval] this.inited ? "</section>" : ''
 

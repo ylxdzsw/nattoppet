@@ -2,7 +2,7 @@ import { extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import * as fs from "node:fs"
 
-const pattern = /^(?:\[(.+?)\]([:=])|\[(mixin|slot)\] ?(.*?)\n)/m
+const pattern = /^(?:\[(.+?)\]([:=])|\[(mixin|#slot)\] ?(.*?)\n)/m
 
 const fetch_text_file = async (path: string) => {
     const filePath = new URL(path, import.meta.url)
@@ -48,7 +48,7 @@ export const tokenize = async (str: string) => {
         if (m[3]) {
             if (m[3] === 'mixin') {
                 tokens.push({ type: 'mixin', path: m[4] })
-            } else if (m[3] === 'slot') {
+            } else if (m[3] === '#slot') {
                 tokens.push({ type: 'slot' })
             }
             str = str.substring(m.index + m[0].length)
@@ -82,7 +82,7 @@ export const tokenize = async (str: string) => {
                 .filter((idx: number) => idx >= 0)
 
             if (slotIndices.length > 1) {
-                throw `multiple [slot] in mixin ${resolvedPath}`
+                throw `multiple [#slot] in mixin ${resolvedPath}`
             } else if (slotIndices.length === 1) {
                 const slotIdx = slotIndices[0]
                 const head = inlineTokens.slice(0, slotIdx)

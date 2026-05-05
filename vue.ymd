@@ -10,7 +10,7 @@
 
 [eval*] this.index = 0
 
-[slot]
+[#slot]
 
 [h2]=
 const id = 'sec' + this.index++
