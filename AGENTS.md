@@ -24,7 +24,7 @@ A tiny macro-based markup language and themes for making documents, slides, or w
 - **Language**: TypeScript with strict mode, targeting ES2022.
 - **Architecture**: Core compiler (`compiler.ts`) tokenizes and interprets macros; standard library (`stdlib.ts`) provides file I/O and renderers; CLI tools (`nattoppet.ts`, `nattoppet-dev.ts`, etc.) wrap the compiler.
 - **Testing**: `bun:test` framework.
-- **CI/CD**: GitHub Actions build native binaries on tag push and release as draft.
+- **CI/CD**: GitHub Actions builds native binaries for Linux, macOS, and Windows on tag push and releases as draft.
 - **Error handling**: Currently throws plain strings (legacy style); no structured error types.
 
 ## File structures

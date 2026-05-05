@@ -16,6 +16,7 @@ jobs:
         include:
           - { name: linux-x64, os: ubuntu-latest, outfile: nattoppet-linux-x64 }
           - { name: macos-x64, os: macos-latest, outfile: nattoppet-macos-x64 }
+          - { name: windows-x64, os: windows-latest, outfile: nattoppet-windows-x64.exe }
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
@@ -25,6 +26,8 @@ jobs:
       - run: bun test
       - run: bun build ./nattoppet.ts --compile --outfile=${{ matrix.outfile }}
       - run: strip ${{ matrix.outfile }}
+        if: runner.os != 'Windows'
+        continue-on-error: true
       - uses: actions/upload-artifact@v4
         with:
           name: nattoppet-${{ matrix.name }}
@@ -39,8 +42,9 @@ jobs:
       - uses: actions/download-artifact@v4
       - run: |
           mkdir -p artifacts
-          mv nattoppet-linux-x64/nattoppet-linux-x64 artifacts/nattoppet-linux-x64
-          mv nattoppet-macos-x64/nattoppet-macos-x64 artifacts/nattoppet-macos-x64
+          mv nattoppet-linux-x64/nattoppet-linux-x64 artifacts/
+          mv nattoppet-macos-x64/nattoppet-macos-x64 artifacts/
+          mv nattoppet-windows-x64/nattoppet-windows-x64.exe artifacts/
       - uses: softprops/action-gh-release@v1
         with:
           draft: true
