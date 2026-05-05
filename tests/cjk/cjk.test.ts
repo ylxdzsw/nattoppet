@@ -6,7 +6,6 @@ import * as path from "node:path"
 import { fileURLToPath } from "node:url"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const fixturesDir = path.join(__dirname, "fixtures")
 
 describe("[cn] macro", () => {
     it("removes newlines between CJK characters", async () => {
@@ -74,7 +73,7 @@ a
     })
 
     it("compiles fixture with block mode for multi-line CJK text", async () => {
-        const fixturePath = path.join(fixturesDir, "cjk_block.ymd")
+        const fixturePath = path.join(__dirname, "cjk_block.ymd")
         const input = fs.readFileSync(fixturePath, "utf-8")
         const output = await compile(input, { ...stdlib, base_dir: __dirname })
         expect(output).toContain("这是一个测试")

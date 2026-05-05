@@ -6,7 +6,6 @@ import * as path from "node:path"
 import { fileURLToPath } from "node:url"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const fixturesDir = path.join(__dirname, "fixtures")
 
 describe("Paragraph generation", () => {
     it("opens paragraph on two-space indent", async () => {
@@ -52,19 +51,19 @@ describe("Paragraph generation", () => {
     })
 
     it("compiles basic paragraph fixture", async () => {
-        const input = fs.readFileSync(path.join(fixturesDir, "basic.ymd"), "utf-8")
+        const input = fs.readFileSync(path.join(__dirname, "basic.ymd"), "utf-8")
         const output = await compile(input, { ...stdlib, base_dir: __dirname })
         expect(output).toBe("<p>First paragraph.</p><p>Second paragraph.\n</p>")
     })
 
     it("compiles paragraph fixture with macros", async () => {
-        const input = fs.readFileSync(path.join(fixturesDir, "with_macros.ymd"), "utf-8")
+        const input = fs.readFileSync(path.join(__dirname, "with_macros.ymd"), "utf-8")
         const output = await compile(input, { ...stdlib, base_dir: __dirname })
         expect(output).toBe("<p>Hello Alice, welcome to Wonderland.</p>")
     })
 
     it("compiles mixed paragraph fixture", async () => {
-        const input = fs.readFileSync(path.join(fixturesDir, "mixed.ymd"), "utf-8")
+        const input = fs.readFileSync(path.join(__dirname, "mixed.ymd"), "utf-8")
         const output = await compile(input, { ...stdlib, base_dir: __dirname })
         expect(output).toBe("Intro text without indent.\n\n<p>Indented paragraph.</p>Outro text.\n")
     })
