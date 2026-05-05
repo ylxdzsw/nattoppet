@@ -1,3 +1,19 @@
+<!doctype html>
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<meta name=author content="ylxdzsw@gmail.com">
+<meta charset="utf-8">
+<title>[title] | ylxdzsw's blog</title>
+
+<style>
+[mixin] form.css
+</style>
+
+<script>
+[mixin] form.js
+</script>
+
+[slot]
+
 <button>Run</button>
 <pre class="hidden"></pre>
 

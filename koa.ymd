@@ -1,3 +1,20 @@
+<!doctype html>
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<meta name=author content="ylxdzsw@gmail.com">
+<meta charset="utf-8">
+<title>[title] | ylxdzsw's blog</title>
+
+<style>
+[mixin] koa.css
+</style>
+
+<section id="title">
+<h1>[title]</h1>
+
+[eval*] this.sections = []
+
+[slot]
+
 </section>
 
 <div id="nav">

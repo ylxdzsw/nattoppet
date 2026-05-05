@@ -1,9 +1,0 @@
-[h2]=
-const id = 'sec' + this.index++
-`<h2><a id="${id}" href="#${id}">${interpret(capture_until('\n'))}</a></h2>`
-
-[h3]=
-const id = 'sec' + this.index++
-`<h3><a id="${id}" href="#${id}">${interpret(capture_until('\n'))}</a></h3>`
-
-[mixin] common.ymd

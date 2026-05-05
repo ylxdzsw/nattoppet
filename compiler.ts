@@ -2,11 +2,30 @@ import { extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import * as fs from "node:fs"
 
-const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
+const pattern = /^(?:\[(.+?)\]([:=])|\[(mixin|slot)\] ?(.*?)\n)/m
 
 const fetch_text_file = async (path: string) => {
     const filePath = new URL(path, import.meta.url)
     return fs.readFileSync(fileURLToPath(filePath), 'utf-8')
+}
+
+const file_exists = (path: string) => {
+    try {
+        const filePath = new URL(path, import.meta.url)
+        fs.accessSync(fileURLToPath(filePath))
+        return true
+    } catch {
+        return false
+    }
+}
+
+const resolve_mixin_path = (path: string): string => {
+    if (extname(path)) return path
+    // Compatibility hack: bare name only resolves to .ymd if exact file doesn't exist
+    if (file_exists(path)) return path
+    const ymdPath = path + ".ymd"
+    if (file_exists(ymdPath)) return ymdPath
+    throw `mixin not found: ${path}`
 }
 
 // tokenize also process mixins
@@ -27,7 +46,11 @@ export const tokenize = async (str: string) => {
         }
 
         if (m[3]) {
-            tokens.push({ type: 'mixin', path: m[3] })
+            if (m[3] === 'mixin') {
+                tokens.push({ type: 'mixin', path: m[4] })
+            } else if (m[3] === 'slot') {
+                tokens.push({ type: 'slot' })
+            }
             str = str.substring(m.index + m[0].length)
             continue
         }
@@ -48,33 +71,29 @@ export const tokenize = async (str: string) => {
     }
 
     for (let i = 0; i < tokens.length; i++) if (tokens[i].type == 'mixin') {
-        const path = tokens[i].path
+        const resolvedPath = resolve_mixin_path(tokens[i].path)
+        const ext = extname(resolvedPath)
 
-        switch (extname(path)) {
-            case "": {
-                const head = await tokenize(await fetch_text_file(path + ".head.ymd"))
-                const tail = await tokenize(await fetch_text_file(path + ".tail.ymd"))
+        if (ext === ".ymd") {
+            const text = await fetch_text_file(resolvedPath)
+            const inlineTokens = await tokenize(text)
+            const slotIndices = inlineTokens
+                .map((t: any, idx: number) => t.type === 'slot' ? idx : -1)
+                .filter((idx: number) => idx >= 0)
+
+            if (slotIndices.length > 1) {
+                throw `multiple [slot] in mixin ${resolvedPath}`
+            } else if (slotIndices.length === 1) {
+                const slotIdx = slotIndices[0]
+                const head = inlineTokens.slice(0, slotIdx)
+                const tail = inlineTokens.slice(slotIdx + 1)
                 tokens.splice(i, 1, ...head)
                 tokens.push(...tail)
-                break
+            } else {
+                tokens.splice(i, 1, ...inlineTokens)
             }
-            case ".ymd": {
-                const mixins = await tokenize(await fetch_text_file(path))
-                tokens.splice(i, 1, ...mixins)
-                break
-            }
-            case ".css": {
-                const content = `<style>${await fetch_text_file(path)}</style>`
-                tokens[i] = { type: "raw", content }
-                break
-            }
-            case ".js": {
-                const content = `<script>${await fetch_text_file(path)}</script>`
-                tokens[i] = { type: "raw", content }
-                break
-            }
-            default:
-                throw "unknown mixin type"
+        } else {
+            tokens[i] = { type: "raw", content: await fetch_text_file(resolvedPath) }
         }
 
         i -= 1 // revisit i since we replaced it

@@ -1,3 +1,9 @@
+<style>
+[mixin] katex.css
+</style>
+
+[slot]
+
 [$]=
 const tex = capture_until('$')
 render_katex(tex, false)

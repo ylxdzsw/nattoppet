@@ -1,0 +1,23 @@
+<!doctype html>
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<meta name=author content="ylxdzsw@gmail.com">
+<meta charset="utf-8">
+<title>[title] | ylxdzsw's blog</title>
+
+<style>
+[mixin] vue.css
+</style>
+
+[eval*] this.index = 0
+
+[slot]
+
+[h2]=
+const id = 'sec' + this.index++
+`<h2><a id="${id}" href="#${id}">${interpret(capture_until('\n'))}</a></h2>`
+
+[h3]=
+const id = 'sec' + this.index++
+`<h3><a id="${id}" href="#${id}">${interpret(capture_until('\n'))}</a></h3>`
+
+[mixin] common.ymd
