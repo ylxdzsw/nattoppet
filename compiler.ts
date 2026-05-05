@@ -1,7 +1,6 @@
 import { extname } from "node:path"
 import { fileURLToPath } from "node:url"
 import * as fs from "node:fs"
-import stdlib from "./stdlib.ts"
 
 const pattern = /^(?:\[(.+?)\]([:=])|\[mixin\] (.+?)\n)/m
 
@@ -64,11 +63,6 @@ export const tokenize = async (str: string) => {
                 tokens.splice(i, 1, ...mixins)
                 break
             }
-            case ".less": {
-                const content = `<style>${stdlib.render_less(await fetch_text_file(path))}</style>`
-                tokens[i] = { type: "raw", content }
-                break
-            }
             case ".css": {
                 const content = `<style>${await fetch_text_file(path)}</style>`
                 tokens[i] = { type: "raw", content }
@@ -76,11 +70,6 @@ export const tokenize = async (str: string) => {
             }
             case ".js": {
                 const content = `<script>${await fetch_text_file(path)}</script>`
-                tokens[i] = { type: "raw", content }
-                break
-            }
-            case ".coffee": {
-                const content = `<script>${stdlib.render_coffee(await fetch_text_file(path), { bare: true })}</script>`
                 tokens[i] = { type: "raw", content }
                 break
             }

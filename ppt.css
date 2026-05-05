@@ -1,0 +1,304 @@
+html {
+  font-family: sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  min-height: 100vh;
+  color: #233;
+}
+@media (min-width: 1200px) {
+  html {
+    font-size: 24px;
+  }
+}
+body {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+pre {
+  background: white;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 20px;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  text-align: left;
+  overflow-x: auto;
+}
+@media (min-width: 1200px) {
+  pre {
+    padding: 25px;
+  }
+}
+code {
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+h2,
+h3 {
+  color: #42b8a6;
+}
+h2 {
+  margin-top: 5vh;
+  font-size: 2rem;
+}
+h3 {
+  margin-top: 6vh;
+  font-size: 1.2rem;
+}
+p {
+  text-indent: 2rem;
+}
+blockquote p {
+  text-indent: 0;
+}
+img {
+  max-width: 100%;
+}
+img.full {
+  width: 100%;
+}
+img.small {
+  width: 40%;
+}
+@media (max-width: 625px) {
+  img.small {
+    width: 60%;
+  }
+}
+img.mid {
+  width: 60%;
+}
+img.big {
+  width: 80%;
+}
+li {
+  font-size: 1.2rem;
+}
+footer {
+  font-weight: 300;
+  font-size: 0.7rem;
+  color: #888;
+}
+.banner > h2 {
+  position: absolute;
+  left: 10vw;
+  top: 45%;
+  width: 80vw;
+  transform: translateY(-50%);
+  text-align: center;
+  margin: 0;
+  font-family: serif;
+  font-size: 3rem;
+  font-weight: normal;
+}
+@media (min-width: 1200px) {
+  .banner > h2 {
+    font-size: 3.2rem;
+  }
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.scen {
+  position: relative;
+  margin: 0;
+  background-color: #eee;
+  transition: background-color 1s ease;
+  padding: 10vh 8vw;
+  width: 84vw;
+  min-height: 60vh;
+}
+.scen.active {
+  background-color: white;
+}
+.scen.wide {
+  width: 96vw;
+  padding: 10vh 2vw;
+}
+.scen::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+@media (min-width: 1200px) {
+  .scen {
+    width: 76vw;
+    padding: 10vh 12vw;
+  }
+}
+.col-12 {
+  float: left;
+  width: 100%;
+}
+.col-11 {
+  float: left;
+  width: 91.66666667%;
+}
+.col-10 {
+  float: left;
+  width: 83.33333333%;
+}
+.col-9 {
+  float: left;
+  width: 75%;
+}
+.col-8 {
+  float: left;
+  width: 66.66666667%;
+}
+.col-7 {
+  float: left;
+  width: 58.33333333%;
+}
+.col-6 {
+  float: left;
+  width: 50%;
+}
+.col-5 {
+  float: left;
+  width: 41.66666667%;
+}
+.col-4 {
+  float: left;
+  width: 33.33333333%;
+}
+.col-3 {
+  float: left;
+  width: 25%;
+}
+.col-2 {
+  float: left;
+  width: 16.66666667%;
+}
+.col-1 {
+  float: left;
+  width: 8.33333333%;
+}
+.plum {
+  color: #ae81ff;
+}
+.fx-plum {
+  transition: color 400ms;
+}
+.fx-plum.fast {
+  transition: color 200ms;
+}
+.fx-plum.slow {
+  transition: color 600ms;
+}
+.fx-plum.active {
+  color: #ae81ff !important;
+}
+.chartreuse {
+  color: #a6e22e;
+}
+.fx-chartreuse {
+  transition: color 400ms;
+}
+.fx-chartreuse.fast {
+  transition: color 200ms;
+}
+.fx-chartreuse.slow {
+  transition: color 600ms;
+}
+.fx-chartreuse.active {
+  color: #a6e22e !important;
+}
+.cyan {
+  color: #66d9ef;
+}
+.fx-cyan {
+  transition: color 400ms;
+}
+.fx-cyan.fast {
+  transition: color 200ms;
+}
+.fx-cyan.slow {
+  transition: color 600ms;
+}
+.fx-cyan.active {
+  color: #66d9ef !important;
+}
+.tomato {
+  color: #f13c1a;
+}
+.fx-tomato {
+  transition: color 400ms;
+}
+.fx-tomato.fast {
+  transition: color 200ms;
+}
+.fx-tomato.slow {
+  transition: color 600ms;
+}
+.fx-tomato.active {
+  color: #f13c1a !important;
+}
+.moccasin {
+  color: #ffe4b5;
+}
+.fx-moccasin {
+  transition: color 400ms;
+}
+.fx-moccasin.fast {
+  transition: color 200ms;
+}
+.fx-moccasin.slow {
+  transition: color 600ms;
+}
+.fx-moccasin.active {
+  color: #ffe4b5 !important;
+}
+.slide {
+  transition: transform 400ms;
+  transform: translateX(-100vw);
+}
+.slide.fast {
+  transition: transform 200ms;
+}
+.slide.slow {
+  transition: transform 600ms;
+}
+.slide.active {
+  transform: translateX(0);
+}
+.fade {
+  transition: opacity 400ms;
+  opacity: 0;
+}
+.fade.fast {
+  transition: opacity 200ms;
+}
+.fade.slow {
+  transition: opacity 600ms;
+}
+.fade.active {
+  opacity: 1;
+}
+.rise {
+  transition: opacity 400ms;
+  transition: transform 400ms;
+  opacity: 0;
+  transform: translateY(10vh);
+}
+.rise.fast {
+  transition: opacity 200ms;
+}
+.rise.slow {
+  transition: opacity 600ms;
+}
+.rise.fast {
+  transition: transform 200ms;
+}
+.rise.slow {
+  transition: transform 600ms;
+}
+.rise.active {
+  opacity: 1;
+  transform: translateY(0);
+}

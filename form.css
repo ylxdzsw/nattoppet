@@ -1,0 +1,87 @@
+html {
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: justify;
+  hyphens: auto;
+  color: #33333d;
+}
+@media (max-width: 425px) {
+  html {
+    font-size: 15px;
+  }
+}
+body {
+  max-width: 625px;
+  margin: 0 auto;
+  padding: 1rem 1rem;
+}
+@media (max-width: 425px) {
+  body {
+    padding: 0 0.8rem;
+  }
+}
+h3 {
+  margin: 2rem 0 1rem;
+  position: relative;
+  border-bottom: #bbb 1px solid;
+}
+label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+label input:not([type]),
+label input[type="text"],
+label input[type="number"] {
+  display: block;
+  width: 100%;
+  margin: 0.1rem 0 1rem;
+  padding: 0.4rem;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+label input[type="checkbox"] {
+  margin: 0.1rem 0.5rem 1rem 0;
+  transform: translateY(0.1rem);
+}
+button {
+  display: inline-block;
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid #bbb;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  line-height: 100%;
+  padding: 0.6rem 0.8rem;
+}
+button:active {
+  border-color: #4a4a4a;
+  outline: 0;
+}
+button:focus {
+  border-color: #485fc7;
+  outline: 0;
+}
+button:hover {
+  border-color: #b5b5b5;
+}
+button:focus:not(:active) {
+  box-shadow: rgba(72, 95, 199, 0.25) 0 0 0 0.125rem;
+}
+pre {
+  clear: both;
+  margin-top: 1rem;
+  font-family: monospace;
+  color: #222;
+  border: 1px solid #bcd;
+  background-color: #ebf1f5;
+  padding: 0.8rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+}
+.hidden {
+  opacity: 0;
+}

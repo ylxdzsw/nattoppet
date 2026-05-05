@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>[title] | ylxdzsw's blog</title>
 
-[mixin] tml.less
-[mixin] tml.coffee
+[mixin] tml.css
+[mixin] tml.js
 
 [eval*] this.index = 0
