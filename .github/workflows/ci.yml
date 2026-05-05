@@ -23,7 +23,6 @@ jobs:
           bun-version: latest
       - run: bun install
       - run: bun test
-      - run: bun run typecheck
       - run: bun build ./nattoppet.ts --compile --outfile=${{ matrix.outfile }}
       - run: strip ${{ matrix.outfile }}
       - uses: actions/upload-artifact@v4

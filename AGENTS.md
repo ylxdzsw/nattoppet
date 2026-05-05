@@ -53,9 +53,6 @@ bun install
 ```bash
 # Bundle for distribution
 bun run build
-
-# Type-check without emitting
-bun run typecheck
 ```
 
 ### Test
@@ -97,7 +94,7 @@ bun run nattoppet-init.ts form
 - **Naming**:
   - `camelCase` for exported functions and variables (`tokenize`, `compile`).
   - `snake_case` for internal/local helpers (`fetch_text_file`, `resolve_mixin_path`).
-- **Types**: Strict TypeScript enabled. Use explicit types where helpful; `any` is used pragmatically in stdlib and env objects due to dynamic macro scoping.
+- **Types**: TypeScript with explicit types where helpful; `any` is used pragmatically in stdlib and env objects due to dynamic macro scoping. No static type checker is enforced.
 - **Error handling**: Currently throws plain strings (e.g., `throw \`mixin not found: ${path}\``). Prefer this style for consistency within the existing codebase.
 - **Comments**: Sparse; explain non-obvious regex or scoping behavior in compiler.
 
@@ -120,5 +117,5 @@ The following real-world projects demonstrate different nattoppet usage patterns
 - The compiler uses `eval` (via `(1, eval)`) to execute macro functions in a dynamically scoped environment. This is a core design choice for macro expressiveness.
 - Forward references are supported: macros defined later in the file can be referenced earlier.
 - Mixin paths without extensions resolve to `.ymd` if an exact file does not exist.
-- The project intentionally avoids formatters/linters to stay minimal; rely on `tsc --noEmit` for type safety.
+- The project intentionally avoids formatters/linters and `tsconfig.json` to stay minimal; Bun transpiles TypeScript at runtime without static type checking.
 - Version 4.0 is a Bun port from the previous Deno-based 3.0, completed as an AI experiment.
