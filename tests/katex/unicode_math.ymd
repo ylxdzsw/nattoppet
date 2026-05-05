@@ -1,7 +1,9 @@
 [mixin] katex
 
-[$]\alpha + \beta = \gamma$
+[$]α + β = γ$
 
-[$]\sum_{i=1}^{n} x_i = \infty$
+[$]\text{你好，世界}$
 
-[$]\mathbb{R} \subseteq \mathbb{C}$
+[$]\sqrt{α^2 + β^2} = γ$
+
+[$]∫_{0}^{∞} e^{-x} dx = 1$

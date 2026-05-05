@@ -33,19 +33,21 @@ describe("KaTeX rendering", () => {
         expect(output).toContain('Some math content')
     })
 
-    it("renders unicode and symbols in inline math", async () => {
+    it("renders unicode characters directly in KaTeX source", async () => {
         const input = fs.readFileSync(path.join(__dirname, "unicode_math.ymd"), "utf-8")
         const output = await compile(input, { ...stdlib, base_dir: __dirname })
         expect(output).toContain('class="katex"')
-        // Greek letters render as raw unicode text in spans
+        // Greek letters written directly as unicode in source (not via \alpha, etc.)
         expect(output).toContain('α')
         expect(output).toContain('β')
         expect(output).toContain('γ')
-        // sum and infinity symbols
-        expect(output).toContain('∑')
-        expect(output).toContain('∞')
-        // Blackboard bold uses mathbb class with plain letters
-        expect(output).toContain('class="mord mathbb"')
+        // CJK inside \text{}
+        expect(output).toContain('你')
+        expect(output).toContain('好')
+        expect(output).toContain('世')
+        expect(output).toContain('界')
+        // Integral symbol written directly as unicode
+        expect(output).toContain('∫')
     })
 
     it("renders aligned environment in display math", async () => {
