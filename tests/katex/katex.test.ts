@@ -32,4 +32,58 @@ describe("KaTeX rendering", () => {
         expect(output).toContain('.katex')
         expect(output).toContain('Some math content')
     })
+
+    it("renders unicode and symbols in inline math", async () => {
+        const input = fs.readFileSync(path.join(__dirname, "unicode_math.ymd"), "utf-8")
+        const output = await compile(input, { ...stdlib, base_dir: __dirname })
+        expect(output).toContain('class="katex"')
+        // Greek letters render as raw unicode text in spans
+        expect(output).toContain('α')
+        expect(output).toContain('β')
+        expect(output).toContain('γ')
+        // sum and infinity symbols
+        expect(output).toContain('∑')
+        expect(output).toContain('∞')
+        // Blackboard bold uses mathbb class with plain letters
+        expect(output).toContain('class="mord mathbb"')
+    })
+
+    it("renders aligned environment in display math", async () => {
+        const input = fs.readFileSync(path.join(__dirname, "aligned_math.ymd"), "utf-8")
+        const output = await compile(input, { ...stdlib, base_dir: __dirname })
+        expect(output).toContain('class="katex"')
+        expect(output).toContain('class="katex-display"')
+        // aligned environment renders as mtable with alignment classes
+        expect(output).toContain('class="mtable"')
+        expect(output).toContain('class="col-align-r"')
+        expect(output).toContain('class="col-align-l"')
+    })
+
+    it("renders matrix environment in display math", async () => {
+        const input = fs.readFileSync(path.join(__dirname, "matrix_math.ymd"), "utf-8")
+        const output = await compile(input, { ...stdlib, base_dir: __dirname })
+        expect(output).toContain('class="katex"')
+        expect(output).toContain('class="katex-display"')
+        // pmatrix renders as mtable
+        expect(output).toContain('class="mtable"')
+    })
+
+    it("renders cases environment in display math", async () => {
+        const input = fs.readFileSync(path.join(__dirname, "cases_math.ymd"), "utf-8")
+        const output = await compile(input, { ...stdlib, base_dir: __dirname })
+        expect(output).toContain('class="katex"')
+        expect(output).toContain('class="katex-display"')
+        // cases environment renders as mtable with array cells
+        expect(output).toContain('class="mtable"')
+        expect(output).toContain('class="arraycolsep"')
+    })
+
+    it("renders nested fractions in display math", async () => {
+        const input = fs.readFileSync(path.join(__dirname, "fraction_math.ymd"), "utf-8")
+        const output = await compile(input, { ...stdlib, base_dir: __dirname })
+        expect(output).toContain('class="katex"')
+        expect(output).toContain('class="katex-display"')
+        // fraction bars (frac-line classes)
+        expect(output).toContain('frac-line')
+    })
 })

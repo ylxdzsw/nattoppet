@@ -1,0 +1,7 @@
+[mixin] katex
+
+[$]\alpha + \beta = \gamma$
+
+[$]\sum_{i=1}^{n} x_i = \infty$
+
+[$]\mathbb{R} \subseteq \mathbb{C}$
